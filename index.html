@@ -1,0 +1,5969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+  <meta name="theme-color" content="#121212">
+  <title>MBV | 24/7 Drum & Bass Radio</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --surface: #181818;
+      --white: #f4f4f4;
+      --muted: #999;
+      --muted-2: #666;
+      --line: #303030;
+      --yellow: #f8ca07;
+      --blue: #1865ba;
+      --red: #e22b24;
+
+      --content-width: 1080px;
+      --about-width: 640px;
+
+      --ease: cubic-bezier(.2, .7, .2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--white);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      background: var(--bg);
+      color: var(--white);
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+      font-size: 16px;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+
+    /* =========================================================
+       LOGO n NAV
+       ========================================================= */
+
+    .site-shell {
+      width: min(
+        calc(100% - 40px),
+        var(--content-width)
+      );
+
+      margin: 0 auto;
+
+      padding-top: 42px;
+    }
+
+    .brand {
+      width: 160px;
+      height: auto;
+
+      margin: 0 auto;
+
+      user-select: none;
+    }
+
+    /* =========================================================
+       NAV
+       ========================================================= */
+
+    .primary-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 28px;
+      margin-top: 40px;
+    }
+
+    .nav-button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 4px 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition:
+        color 160ms ease;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      color: var(--white);
+      outline: none;
+    }
+
+    .nav-button.active {
+      color: var(--yellow);
+    }
+
+
+    /* =========================================================
+       VIEWS
+       ========================================================= */
+
+    .view {
+      display: none;
+      width: 100%;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+
+    /* =========================================================
+       LIVE PLAYER
+       ========================================================= */
+
+    .player {
+      width: min(
+        calc(100% - 40px),
+        700px
+      );
+
+      display: flex;
+      flex-direction: column;
+
+      margin: 0 auto;
+
+      padding-top: 52px;
+      padding-bottom: 56px;
+    }
+
+    .live-orientation {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+
+      width: min(calc(100% - 40px), 700px);
+      margin: 30px auto 0;
+
+      text-align: center;
+    }
+
+    .live-orientation-item {
+      min-width: 0;
+
+      text-align: center;
+    }
+
+    .live-orientation-label {
+      display: block;
+      color: var(--muted-2);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .live-orientation-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 3px;
+      overflow: hidden;
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .live-orientation-mood {
+      display: block;
+      margin-top: 2px;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 11px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .live-orientation-icon {
+      display: inline-flex;
+    }
+
+    .live-orientation-icon svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.7;
+    }
+
+    .live-next-countdown {
+      color: var(--yellow);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .player.requesting .artwork-wrap,
+    .player.requesting .metadata {
+      display: none;
+    }
+
+    .player.requesting .player-core {
+      display: block;
+    }
+
+    .player.requesting .request-view {
+      order: 2;
+    }
+
+    .player .controls {
+      order: 3;
+    }
+
+    .player .osd {
+      order: 4;
+    }
+
+    /* =========================================================
+       PLAYER
+       ARTWORK + META
+       ========================================================= */
+
+    .player-core {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      order: 1;
+      text-align: center;
+      max-width: 590px;
+      margin: 0 auto;
+    }
+
+    .show-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 7px 12px;
+
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+
+      color: var(--white);
+
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .show-pill-icon,
+    .daypart-icon {
+      display: inline-flex;
+      flex-shrink: 0;
+    }
+
+    .show-pill-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .daypart-icon svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .show-pill-icon svg,
+    .daypart-icon svg {
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.7;
+    }
+
+    .artwork-wrap {
+      width: 210px;
+      height: 210px;
+
+      position: relative;
+
+      flex-shrink: 0;
+    }
+
+    .artwork {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      border-radius: 50%;
+
+      opacity: .7;
+
+      animation:
+        artwork-spin 10s linear infinite;
+
+      animation-play-state: paused;
+
+      user-select: none;
+      pointer-events: none;
+
+      transition:
+        opacity 250ms ease;
+    }
+
+    .player.playing .artwork,
+    .player.muted .artwork {
+      opacity: 1;
+
+      animation-play-state: running;
+    }
+
+    .player.paused .artwork {
+      opacity: 1;
+
+      animation-play-state: paused;
+    }
+
+    .player.buffering .artwork,
+    .player.reconnecting .artwork {
+      opacity: .8;
+
+      animation-play-state: paused;
+    }
+
+    @keyframes artwork-spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+
+    /* =========================================================
+       METADATA
+       ========================================================= */
+
+    .metadata {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .show-name {
+      margin-bottom: 4px;
+
+      color: var(--white);
+
+      font-size: 20px;
+      font-weight: 600;
+
+      letter-spacing: -.01em;
+    }
+
+    .track-line {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      min-width: 0;
+
+      color: var(--muted);
+
+      font-size: 17px;
+      line-height: 1.35;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-line .artist {
+      color: var(--white);
+    }
+
+    .track-line .separator {
+      display: none;
+    }
+
+
+    /* =========================================================
+       SIGNAL BUZZ THING
+       ========================================================= */
+
+    .signal {
+      position: absolute;
+
+      inset: -14px;
+
+      width: auto;
+      height: auto;
+
+      border-radius: 50%;
+
+      pointer-events: none;
+
+      z-index: 2;
+    }
+
+    .signal-canvas {
+      display: block;
+
+      width: 100%;
+      height: 100%;
+    }
+
+     /* =========================================================
+       PLAYER CONTROLS
+       ========================================================= */
+
+    .controls {
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 18px;
+
+      min-height: 32px;
+    }
+
+    .control {
+      position: relative;
+
+      appearance: none;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 30px;
+      height: 30px;
+
+      padding: 0;
+
+      border: 0;
+      background: transparent;
+
+      color: var(--white);
+
+      cursor: pointer;
+
+      transition:
+        color 140ms ease;
+    }
+
+    .control:hover,
+    .control:focus-visible {
+      color: var(--yellow);
+      outline: none;
+    }
+
+    .control svg {
+      width: 20px;
+      height: 20px;
+
+      fill: currentColor;
+      stroke: currentColor;
+    }
+
+    .play-control {
+      width: 34px;
+      height: 34px;
+    }
+
+    .play-control svg {
+      width: 25px;
+      height: 25px;
+    }
+
+
+    /* =========================================================
+       VOLUME
+       ========================================================= */
+
+    .volume-control {
+      width: auto;
+
+      min-width: 30px;
+
+      justify-content: flex-start;
+    }
+
+    .volume-slider-wrap {
+      display: flex;
+      align-items: center;
+
+      width: 0;
+
+      overflow: hidden;
+
+      transition:
+        width 160ms var(--ease);
+    }
+
+    .volume-control:hover .volume-slider-wrap,
+    .volume-control:focus-within .volume-slider-wrap {
+      width: 174px;
+
+      margin-left: 5px;
+    }
+
+    .volume-slider {
+      width: 82px;
+      height: 2px;
+
+      flex-shrink: 0;
+
+      appearance: none;
+
+      background: #444;
+
+      cursor: pointer;
+      outline: none;
+    }
+
+    .signal-label {
+      position: static;
+
+      width: 76px;
+
+      margin-left: 10px;
+
+      transform: none;
+
+      color: var(--muted);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+      font-size: 9px;
+
+      letter-spacing: .08em;
+      text-align: left;
+      text-transform: uppercase;
+
+      opacity: 0;
+
+      transition:
+        opacity 160ms ease;
+    }
+
+    .signal-state-icon {
+      display: inline-flex;
+      flex-shrink: 0;
+      color: currentColor;
+    }
+
+    .signal-state-icon svg {
+      width: 13px;
+      height: 13px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.8;
+    }
+
+    .volume-control:hover .signal-label,
+    .volume-control:focus-within .signal-label {
+      opacity: 1;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      appearance: none;
+
+      width: 9px;
+      height: 9px;
+
+      border-radius: 50%;
+
+      background: var(--yellow);
+
+      cursor: pointer;
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 9px;
+      height: 9px;
+
+      border: 0;
+      border-radius: 50%;
+
+      background: var(--yellow);
+
+      cursor: pointer;
+    }
+
+
+    /* =========================================================
+       OSD
+       ========================================================= */
+
+    .osd {
+      min-height: 22px;
+
+      margin-top: 20px;
+
+      text-align: center;
+
+      color: var(--muted);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+      font-size: 11px;
+
+      letter-spacing: .08em;
+
+      opacity: 0;
+
+      transition:
+        opacity 150ms ease;
+    }
+
+    .osd.visible {
+      opacity: 1;
+    }
+
+
+    /* =========================================================
+       REQUEST
+       ========================================================= */
+
+    .request-view {
+      width: min(
+        calc(100% - 40px),
+        480px
+      );
+
+      margin: 0 auto;
+
+      padding-top: 20px;
+      padding-bottom: 40px;
+    }
+
+    .request-view h2 {
+      margin: 0;
+
+      padding-bottom: 10px;
+
+      border-bottom: 1px solid var(--line);
+
+      font-size: 28px;
+      font-weight: 500;
+
+      letter-spacing: -.03em;
+    }
+
+    .request-view p {
+      margin: 12px 0 24px;
+
+      color: var(--muted);
+
+      font-size: 14px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .request-view .field {
+      display: grid;
+      grid-template-columns: 84px minmax(0, 1fr);
+      align-items: baseline;
+      gap: 16px;
+      padding: 11px 0;
+      margin-bottom: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .field label {
+      display: block;
+
+      margin-bottom: 7px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+      font-weight: 600;
+
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .request-view .field label {
+      margin: 0;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+
+      padding: 11px 0;
+
+      border: 0;
+      border-bottom: 1px solid var(--line);
+
+      border-radius: 0;
+
+      background: transparent;
+
+      color: var(--white);
+
+      outline: none;
+
+      resize: vertical;
+    }
+
+    .request-view .field input,
+    .request-view .field textarea {
+      padding: 0;
+      border-bottom: 0;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-bottom-color: var(--yellow);
+    }
+
+    .request-actions {
+      display: flex;
+      align-items: center;
+
+      gap: 20px;
+
+      margin-top: 24px;
+      padding-top: 14px;
+
+      border-top: 1px solid var(--line);
+    }
+
+    .request-button {
+      appearance: none;
+
+      border: 0;
+      background: transparent;
+
+      padding: 0;
+
+      color: var(--yellow);
+
+      font-size: 12px;
+      font-weight: 600;
+
+      letter-spacing: .08em;
+      text-transform: uppercase;
+
+      cursor: pointer;
+    }
+
+    .request-button.secondary {
+      color: var(--muted);
+    }
+
+    .request-button:hover,
+    .request-button:focus-visible {
+      color: var(--white);
+      outline: none;
+    }
+
+
+    /* =========================================================
+       SCHEDULE
+       ========================================================= */
+
+    .schedule-view {
+      padding-top: 64px;
+      padding-bottom: 160px;
+    }
+
+    .schedule-container {
+      width: min(
+        calc(100% - 40px),
+        var(--content-width)
+      );
+
+      margin: 0 auto;
+    }
+
+    .section-heading {
+      margin: 0 0 32px;
+
+      font-size: 32px;
+      font-weight: 500;
+
+      letter-spacing: -.03em;
+    }
+
+    .schedule-spotlight {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1px;
+
+      margin-bottom: 34px;
+
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .schedule-status {
+      min-width: 0;
+
+      padding: 18px 20px;
+
+      background: var(--surface);
+    }
+
+    .schedule-status.next {
+      background: transparent;
+    }
+
+    .schedule-status-label {
+      display: block;
+
+      margin-bottom: 8px;
+
+      color: var(--muted-2);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .schedule-status-name {
+      display: block;
+
+      overflow: hidden;
+
+      color: var(--white);
+
+      font-size: 19px;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .schedule-status-icon {
+      display: inline-flex;
+
+      margin-bottom: 7px;
+
+      color: var(--yellow);
+    }
+
+    .schedule-status-icon svg {
+      width: 18px;
+      height: 18px;
+
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.7;
+    }
+
+    .schedule-status-time {
+      display: block;
+
+      margin-top: 5px;
+
+      color: var(--yellow);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+
+    .schedule-status-description {
+      margin: 10px 0 0;
+
+      color: var(--muted);
+
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .schedule-status.next .schedule-status-name {
+      color: var(--muted);
+    }
+
+    .timeline-scroll {
+      width: 100%;
+
+      overflow: hidden;
+
+      scrollbar-width: none;
+    }
+
+    .timeline-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .timeline {
+      position: relative;
+
+      padding-bottom: 8px;
+    }
+
+    .timeline-hours {
+      display: grid;
+
+      grid-template-columns:
+        repeat(24, 1fr);
+
+      height: 30px;
+
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hour {
+      position: relative;
+
+      border-left: 1px solid #242424;
+
+      color: var(--muted-2);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 10px;
+    }
+
+    .hour.major {
+      color: var(--muted);
+    }
+
+    .hour span {
+      position: absolute;
+
+      left: 5px;
+      bottom: 7px;
+    }
+
+    .dayparts {
+      position: relative;
+
+      border-top: 1px solid var(--line);
+
+      min-height: 105px;
+    }
+
+    .daypart {
+      position: absolute;
+      top: 0;
+
+      padding-top: 18px;
+
+      border-left: 1px solid #242424;
+
+      overflow: hidden;
+
+      cursor: pointer;
+    }
+
+    .daypart:first-child {
+      border-left: 0;
+    }
+
+    .daypart-name {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+
+      color: var(--muted);
+
+      font-size: 13px;
+      font-weight: 600;
+
+      letter-spacing: .04em;
+    }
+
+    .daypart.active .daypart-name {
+      color: var(--yellow);
+    }
+
+    .daypart-time {
+      display: block;
+
+      margin-top: 4px;
+
+      color: var(--muted-2);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 10px;
+    }
+
+    .daypart-detail {
+      max-height: 0;
+
+      overflow: hidden;
+
+      padding-right: 20px;
+
+      opacity: 0;
+
+      transition:
+        max-height 220ms var(--ease),
+        opacity 180ms ease,
+        padding-top 220ms ease;
+    }
+
+    .daypart.open .daypart-detail {
+      max-height: 320px;
+
+      padding-top: 18px;
+
+      opacity: 1;
+    }
+
+    .daypart.open {
+      z-index: 10;
+      min-width: 190px;
+      padding-right: 14px;
+      background: var(--surface);
+      overflow: visible;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .28);
+    }
+
+    .daypart-description {
+      color: var(--muted);
+
+      font-size: 13px;
+      line-height: 1.5;
+
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .daypart-type {
+      margin-top: 8px;
+
+      color: var(--muted-2);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 10px;
+
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .now-marker {
+      position: absolute;
+
+      top: 0;
+      bottom: 0;
+
+      width: 1px;
+
+      background: var(--yellow);
+
+      pointer-events: none;
+
+      z-index: 5;
+    }
+
+    .now-marker::before {
+      content: "NOW";
+
+      position: absolute;
+
+      top: -22px;
+      left: 5px;
+
+      color: var(--yellow);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 9px;
+
+      letter-spacing: .06em;
+    }
+
+    .now-marker::after {
+      content: "";
+
+      position: absolute;
+
+      top: -2px;
+      left: -2px;
+
+      width: 5px;
+      height: 5px;
+
+      border-radius: 50%;
+
+      background: var(--yellow);
+    }
+
+    .daypart.active {
+      background: var(--surface);
+      box-shadow: inset 0 -2px 0 var(--yellow);
+    }
+
+
+    /* =========================================================
+       RECENTLY PLAYED
+       ========================================================= */
+
+    .recently-played {
+      margin-top: 72px;
+    }
+
+    .subheading {
+      margin: 0 0 20px;
+
+      color: var(--white);
+
+      font-size: 14px;
+      font-weight: 600;
+
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .recent-list {
+      border-top: 1px solid var(--line);
+    }
+
+    .recent-row {
+      display: grid;
+
+      grid-template-columns:
+        70px
+        1fr;
+
+      gap: 20px;
+
+      padding: 14px 0;
+
+      border-bottom: 1px solid var(--line);
+    }
+
+    .recent-time {
+      color: var(--muted-2);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 11px;
+    }
+
+    .recent-track {
+      color: var(--white);
+
+      font-size: 14px;
+    }
+
+
+    /* =========================================================
+       ABOUT
+       ========================================================= */
+
+    .about-view {
+      padding-top: 64px;
+      padding-bottom: 160px;
+    }
+
+    .about-container {
+      width: min(
+        calc(100% - 40px),
+        var(--about-width)
+      );
+
+      margin: 0 auto;
+    }
+
+    @media (min-width: 701px) {
+      .about-container {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 28px;
+      }
+
+      .about-container > .about-section {
+        min-width: 0;
+      }
+    }
+
+    .about-section {
+      border-top: 1px solid var(--line);
+    }
+
+    .about-section:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .about-content {
+      max-height: 0;
+
+      overflow: hidden;
+
+      opacity: 0;
+
+      transition:
+        max-height 220ms var(--ease),
+        opacity 180ms ease;
+    }
+
+    .about-section.open .about-content {
+      max-height: 600px;
+
+      padding-bottom: 28px;
+
+      opacity: 1;
+    }
+
+    .about-section.always-open .about-content {
+      max-height: none;
+
+      padding: 0 0 34px;
+
+      opacity: 1;
+    }
+
+    .manual-section {
+      padding-top: 20px;
+    }
+
+    .manual-kicker {
+      margin-bottom: 12px;
+
+      color: var(--yellow);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .manual-section .about-content p {
+      max-width: 58ch;
+    }
+
+    .about-content p {
+      margin: 0 0 18px;
+
+      color: var(--muted);
+
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .about-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    .fact-list {
+      margin: 0;
+      padding: 0;
+
+      list-style: none;
+    }
+
+    .fact {
+      display: grid;
+
+      grid-template-columns:
+        120px
+        1fr;
+
+      gap: 20px;
+
+      padding: 9px 0;
+    }
+
+    .fact-label {
+      color: var(--muted-2);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 10px;
+
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .fact-value {
+      color: var(--white);
+
+      font-size: 14px;
+    }
+
+    .controls-reference {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 12px;
+
+      line-height: 2;
+
+      white-space: pre;
+    }
+
+    .sticker-card {
+      padding: 24px 0 4px;
+
+      border-top: 1px solid var(--line);
+    }
+
+    .sticker-card strong {
+      display: block;
+
+      margin-bottom: 5px;
+
+      color: var(--white);
+
+      font-size: 18px;
+    }
+
+    .sticker-card span {
+      color: var(--muted);
+
+      font-size: 14px;
+    }
+
+    .sticker-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .sticker-card {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .sticker-art {
+      display: grid;
+      place-items: center;
+
+      width: 72px;
+      height: 72px;
+
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .sticker-art img {
+      width: 54px;
+      height: 54px;
+
+      object-fit: contain;
+    }
+
+    .sticker-details strong,
+    .sticker-details span {
+      display: block;
+    }
+
+    .sticker-price {
+      margin-top: 5px;
+
+      color: var(--yellow) !important;
+
+      font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+      font-size: 11px !important;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .sticker-order {
+      color: var(--yellow);
+
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .sticker-order:hover,
+    .sticker-order:focus-visible {
+      color: var(--white);
+      outline: none;
+    }
+
+    .skin-picker {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .skin-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      appearance: none;
+      padding: 8px 10px;
+
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .skin-button::before {
+      content: "";
+
+      width: 8px;
+      height: 8px;
+
+      border-radius: 50%;
+      background: var(--skin-color);
+    }
+
+    .skin-button:hover,
+    .skin-button:focus-visible,
+    .skin-button[aria-pressed="true"] {
+      border-color: var(--skin-color);
+      color: var(--skin-color);
+      outline: none;
+    }
+
+
+    /* =========================================================
+       MINI PLAYER
+       ========================================================= */
+
+    .mini-player {
+      position: fixed;
+
+      left: 50%;
+      bottom: 20px;
+
+      transform:
+        translate(-50%, calc(100% + 30px));
+
+      width: min(
+        calc(100% - 32px),
+        620px
+      );
+
+      min-height: 68px;
+
+      display: flex;
+      align-items: center;
+
+      padding: 0 16px;
+
+      border: 1px solid var(--line);
+
+      background: #161616;
+
+      z-index: 100;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transition:
+        transform 220ms var(--ease),
+        opacity 180ms ease;
+    }
+
+    .mini-player.visible {
+      transform:
+        translate(-50%, 0);
+
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mini-info {
+      min-width: 0;
+      flex: 1;
+
+      padding-right: 20px;
+    }
+
+    .mini-show {
+      color: var(--muted);
+
+      font-size: 11px;
+      font-weight: 600;
+
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .mini-track {
+      margin-top: 2px;
+
+      color: var(--white);
+
+      font-size: 13px;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini-controls {
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+    }
+
+    .mini-control {
+      appearance: none;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 28px;
+      height: 28px;
+
+      padding: 0;
+
+      border: 0;
+      background: transparent;
+
+      color: var(--white);
+
+      cursor: pointer;
+    }
+
+    .mini-control:hover,
+    .mini-control:focus-visible {
+      color: var(--yellow);
+      outline: none;
+    }
+
+    .mini-control svg {
+      width: 17px;
+      height: 17px;
+
+      fill: currentColor;
+      stroke: currentColor;
+    }
+
+    .mini-volume-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .mini-volume-slider-wrap {
+      display: flex;
+      align-items: center;
+
+      width: 0;
+      overflow: hidden;
+
+      transition: width 160ms var(--ease);
+    }
+
+    .mini-volume-control:hover .mini-volume-slider-wrap,
+    .mini-volume-control:focus-within .mini-volume-slider-wrap {
+      width: 78px;
+    }
+
+    .mini-volume-slider {
+      width: 68px;
+      height: 2px;
+
+      appearance: none;
+
+      background: #444;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .mini-volume-slider::-webkit-slider-thumb {
+      appearance: none;
+
+      width: 9px;
+      height: 9px;
+
+      border-radius: 50%;
+      background: var(--yellow);
+      cursor: pointer;
+    }
+
+    .mini-volume-slider::-moz-range-thumb {
+      width: 9px;
+      height: 9px;
+
+      border: 0;
+      border-radius: 50%;
+      background: var(--yellow);
+      cursor: pointer;
+    }
+
+
+    @media (min-width: 701px) {
+
+      .site-shell {
+        padding-top: 28px;
+      }
+
+      .primary-nav {
+        margin-top: 26px;
+      }
+
+      .live-orientation {
+        margin-top: 18px;
+      }
+
+      .player {
+        padding-top: 30px;
+        padding-bottom: 34px;
+      }
+
+      .artwork-wrap {
+        width: 190px;
+        height: 190px;
+      }
+
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 700px) {
+
+      .site-shell {
+        width: calc(100% - 32px);
+
+        padding-top: 28px;
+      }
+
+      .brand {
+        width: 140px;
+      }
+
+      .primary-nav {
+        gap: 22px;
+
+        margin-top: 32px;
+      }
+
+      .nav-button {
+        font-size: 12px;
+      }
+
+      .player {
+        width: calc(100% - 32px);
+
+        padding-top: 42px;
+        padding-bottom: 44px;
+      }
+
+      .live-orientation {
+        width: calc(100% - 32px);
+        gap: 10px;
+      }
+
+      .player-core {
+        gap: 22px;
+      }
+
+      .artwork-wrap {
+        width: 180px;
+        height: 180px;
+      }
+
+      .metadata {
+        width: 100%;
+      }
+
+      .show-name {
+        font-size: 18px;
+      }
+
+      .track-line {
+        font-size: 15px;
+      }
+
+      .schedule-view,
+      .about-view {
+        padding-top: 48px;
+      }
+
+      .schedule-container,
+      .about-container {
+        width: calc(100% - 32px);
+      }
+
+      .section-heading {
+        font-size: 28px;
+      }
+
+      .schedule-spotlight {
+        grid-template-columns: 1fr;
+      }
+
+      .schedule-status.next {
+        border-top: 1px solid var(--line);
+      }
+
+      .recent-row {
+        grid-template-columns:
+          58px
+          1fr;
+
+        gap: 14px;
+      }
+
+      .fact {
+        grid-template-columns:
+          100px
+          1fr;
+
+        gap: 14px;
+      }
+
+      .mini-player {
+        bottom: max(
+          12px,
+          env(safe-area-inset-bottom)
+        );
+
+        width: calc(100% - 20px);
+
+        min-height: 64px;
+
+        padding-left: 12px;
+        padding-right: 10px;
+      }
+
+      .mini-info {
+        padding-right: 10px;
+      }
+
+      .mini-show {
+        font-size: 10px;
+      }
+
+      .mini-track {
+        font-size: 12px;
+      }
+
+      .mini-controls {
+        gap: 5px;
+      }
+    }
+
+    @media (hover: none), (pointer: coarse) {
+
+      .control,
+      .play-control {
+        width: 44px;
+        height: 44px;
+      }
+
+      .control svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .play-control svg {
+        width: 27px;
+        height: 27px;
+      }
+
+      .volume-control {
+        width: 44px;
+        min-width: 44px;
+      }
+
+      .volume-slider-wrap {
+        display: none;
+      }
+
+      .mini-control {
+        width: 44px;
+        height: 44px;
+      }
+
+      .mini-volume-slider-wrap,
+      .mini-volume-control:hover .mini-volume-slider-wrap,
+      .mini-volume-control:focus-within .mini-volume-slider-wrap {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+
+        transition-duration:
+          0.01ms !important;
+
+        animation-duration:
+          0.01ms !important;
+
+        animation-iteration-count:
+          1 !important;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <div class="app">
+
+
+    <!-- =======================================================
+         PERSISTENT SHELL
+         ======================================================= -->
+
+    <header class="site-shell">
+
+      <img
+        id="brandLogo"
+        class="brand"
+        src="images/MBV_YELLOWc.png"
+        alt="MBV"
+      >
+
+
+      <nav
+        class="primary-nav"
+        aria-label="Primary navigation"
+      >
+
+        <button
+          class="nav-button active"
+          data-view="live"
+          type="button"
+        >
+          LISTEN
+        </button>
+
+        <button
+          class="nav-button"
+          data-view="schedule"
+          type="button"
+        >
+          SCHEDULE
+        </button>
+
+        <button
+          class="nav-button"
+          data-view="about"
+          type="button"
+        >
+          ABOUT
+        </button>
+
+      </nav>
+
+    </header>
+
+
+    <!-- =======================================================
+         VIEWS
+         ======================================================= -->
+
+    <main>
+
+
+      <!-- =====================================================
+           LIVE
+           ===================================================== -->
+
+      <section
+        id="liveView"
+        class="view active"
+        aria-label="Live radio"
+      >
+
+        <div class="live-orientation" aria-live="polite">
+
+          <div class="live-orientation-item">
+            <span class="live-orientation-label">
+              NOW
+            </span>
+            <strong
+              id="liveCurrentShow"
+              class="live-orientation-name"
+            >
+              <span id="liveCurrentIcon" class="live-orientation-icon" aria-hidden="true"></span>
+              Connecting
+            </strong>
+            <span
+              id="liveCurrentMood"
+              class="live-orientation-mood"
+            >
+              24/7 autonomous radio
+            </span>
+          </div>
+
+          <div class="live-orientation-item">
+            <span class="live-orientation-label">
+              NEXT
+            </span>
+            <strong
+              id="liveNextShow"
+              class="live-orientation-name"
+            >
+              <span id="liveNextIcon" class="live-orientation-icon" aria-hidden="true"></span>
+              Schedule loading
+            </strong>
+            <span
+              id="liveNextMood"
+              class="live-orientation-mood"
+            >
+              Time-of-day programming
+            </span>
+
+            <span
+              id="liveNextCountdown"
+              class="live-next-countdown"
+            >
+              STARTS IN --
+            </span>
+          </div>
+
+        </div>
+
+        <div
+          id="player"
+          class="player ready"
+        >
+
+
+          <!-- =================================================
+               ARTWORK + METADATA
+               ================================================= -->
+
+          <div
+            id="playerCore"
+            class="player-core"
+          >
+
+            <div class="artwork-wrap">
+
+              <img
+                id="artwork"
+                class="artwork"
+                src="https://raw.githubusercontent.com/radiombv/mbvradio26/refs/heads/main/dookie.png"
+                alt=""
+              >
+
+              <div
+                id="signal"
+                class="signal"
+                aria-label="Signal status"
+              >
+
+                <canvas
+                  id="signalCanvas"
+                  class="signal-canvas"
+                  aria-hidden="true"
+                ></canvas>
+
+              </div>
+
+            </div>
+
+            <div
+              class="show-pill"
+              aria-live="polite"
+            >
+
+              <span
+                id="showIcon"
+                class="show-pill-icon"
+                aria-hidden="true"
+              ></span>
+
+              <span id="showName">
+                CONNECTING
+              </span>
+
+            </div>
+
+
+            <div class="metadata">
+
+              <div
+                class="track-line"
+                aria-live="polite"
+              >
+
+                <span
+                  id="artist"
+                  class="artist"
+                >
+                  —
+                </span>
+
+                <span class="separator">
+                  —
+                </span>
+
+                <span id="trackTitle">
+                  —
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =================================================
+               CONTROLS
+               ================================================= -->
+
+          <div
+            id="controls"
+            class="controls"
+          >
+
+
+            <!-- PLAY / PAUSE -->
+
+            <button
+              id="playButton"
+              class="control play-control"
+              type="button"
+              aria-label="Play"
+              title="Play"
+            >
+
+              <svg
+                id="playIcon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M8 5 L19 12 L8 19 Z"
+                ></path>
+              </svg>
+
+            </button>
+
+
+            <!-- VOLUME -->
+
+            <div
+              class="control volume-control"
+              role="group"
+              aria-label="Volume"
+            >
+
+              <button
+                id="muteButton"
+                class="control"
+                type="button"
+                aria-label="Mute"
+                title="Mute"
+              >
+
+                <svg
+                  id="volumeIcon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+
+                  <path
+                    d="M4 9 H8 L13 5 V19 L8 15 H4 Z"
+                  ></path>
+
+                  <path
+                    d="M16 9 C18 11 18 13 16 15"
+                    fill="none"
+                    stroke-width="1.8"
+                  ></path>
+
+                  <path
+                    d="M18.5 6.8 C22 10 22 14 18.5 17.2"
+                    fill="none"
+                    stroke-width="1.8"
+                  ></path>
+
+                </svg>
+
+              </button>
+
+
+              <div
+                class="volume-slider-wrap"
+              >
+
+                <input
+                  id="volumeSlider"
+                  class="volume-slider"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="84"
+                  aria-label="Volume"
+                >
+
+                <span
+                  id="signalLabel"
+                  class="signal-label"
+                  aria-live="polite"
+                >
+                  READY
+                </span>
+
+                <span
+                  id="signalStateIcon"
+                  class="signal-state-icon"
+                  aria-hidden="true"
+                ></span>
+
+              </div>
+
+            </div>
+
+
+            <!-- REQUEST -->
+
+            <button
+              id="requestButton"
+              class="control"
+              type="button"
+              aria-label="Request a track"
+              title="Request"
+            >
+
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+
+                <path
+                  d="M5 5 H19 V16 H12 L8 19 V16 H5 Z"
+                  fill="none"
+                  stroke-width="1.7"
+                ></path>
+
+              </svg>
+
+            </button>
+
+          </div>
+
+
+          <!-- =================================================
+               OSD
+               ================================================= -->
+
+          <div
+            id="osd"
+            class="osd"
+            aria-live="polite"
+          ></div>
+
+
+          <!-- =================================================
+               REQUEST STATE
+               ================================================= -->
+
+          <div
+            id="requestView"
+            class="request-view"
+            hidden
+          >
+
+            <h2>
+              WHAT'S UP?
+            </h2>
+
+            <p>
+              Send a track request or message to MBV.
+            </p>
+
+
+            <div class="field">
+
+              <label for="requestName">
+                Name
+              </label>
+
+              <input
+                id="requestName"
+                type="text"
+                autocomplete="name"
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label for="requestMessage">
+                Message
+              </label>
+
+              <textarea
+                id="requestMessage"
+                rows="4"
+              ></textarea>
+
+            </div>
+
+
+            <div class="request-actions">
+
+              <button
+                id="sendRequest"
+                class="request-button"
+                type="button"
+              >
+                SEND
+              </button>
+
+              <button
+                id="cancelRequest"
+                class="request-button secondary"
+                type="button"
+              >
+                BACK
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           SCHEDULE
+           ===================================================== -->
+
+      <section
+        id="scheduleView"
+        class="view schedule-view"
+        aria-label="Schedule"
+      >
+
+        <div class="schedule-container">
+
+          <div
+            class="schedule-spotlight"
+            aria-live="polite"
+          >
+
+            <div class="schedule-status">
+
+              <span class="schedule-status-label">
+                NOW
+              </span>
+
+              <span
+                id="currentShowIcon"
+                class="schedule-status-icon"
+                aria-hidden="true"
+              ></span>
+
+              <strong
+                id="currentShowName"
+                class="schedule-status-name"
+              >
+                Loading...
+              </strong>
+
+              <span
+                id="currentShowTime"
+                class="schedule-status-time"
+              >
+                --:--
+              </span>
+
+              <p
+                id="currentShowDescription"
+                class="schedule-status-description"
+              ></p>
+
+            </div>
+
+
+            <div class="schedule-status next">
+
+              <span class="schedule-status-label">
+                NEXT
+              </span>
+
+              <span
+                id="nextShowIcon"
+                class="schedule-status-icon"
+                aria-hidden="true"
+              ></span>
+
+              <strong
+                id="nextShowName"
+                class="schedule-status-name"
+              >
+                Loading schedule...
+              </strong>
+
+              <span
+                id="nextShowTime"
+                class="schedule-status-time"
+              >
+                --:--
+              </span>
+
+              <p
+                id="nextShowDescription"
+                class="schedule-status-description"
+              ></p>
+
+            </div>
+
+          </div>
+
+
+          <div class="timeline-scroll">
+
+            <div
+              id="timeline"
+              class="timeline"
+            >
+
+              <div
+                id="timelineHours"
+                class="timeline-hours"
+              ></div>
+
+
+              <div
+                id="dayparts"
+                class="dayparts"
+              ></div>
+
+
+              <div
+                id="nowMarker"
+                class="now-marker"
+                aria-hidden="true"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+          <section class="recently-played">
+
+            <h2 class="subheading">
+              RECENTLY PLAYED
+            </h2>
+
+            <div
+              id="recentList"
+              class="recent-list"
+            ></div>
+
+          </section>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           ABOUT
+           ===================================================== -->
+
+      <section
+        id="aboutView"
+        class="view about-view"
+        aria-label="About MBV"
+      >
+
+        <div class="about-container">
+
+          <!-- STICKER SHOP -->
+
+          <section class="about-section open always-open">
+
+            <div class="manual-kicker">
+              THANKS FOR YOUR SUPPORT!
+            </div>
+
+            <div class="about-content">
+              <div class="sticker-grid">
+                <article class="sticker-card">
+                  <div class="sticker-art">
+                    <img
+                      src="https://raw.githubusercontent.com/radiombv/mbvradio26/refs/heads/main/MBV_YELLOWc.png"
+                      alt="YELLOW"
+                    >
+                  </div>
+                  <div class="sticker-details">
+                    <strong>CLASSIC YELLOW</strong>
+                    <span class="sticker-price">$3</span>
+                  </div>
+                  <a
+                    class="sticker-order"
+                    href="mailto:mbv@mbvradio.com?subject=MBV%20Yellow%20Sticker"
+                  >
+                    BUY
+                  </a>
+                </article>
+
+                <article class="sticker-card">
+                  <div class="sticker-art">
+                    <img
+                      src="https://raw.githubusercontent.com/radiombv/mbvradio26/refs/heads/main/MBV_GREENc.png"
+                      alt="GREEN"
+                    >
+                  </div>
+                  <div class="sticker-details">
+                    <strong>GREEN</strong>
+                    <span class="sticker-price">$4.20</span>
+                  </div>
+                  <a
+                    class="sticker-order"
+                    href="mailto:mbv@mbvradio.com?subject=MBV%20Green%20Sticker"
+                  >
+                    BUY
+                  </a>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- ABOUT -->
+
+          <section class="about-section manual-section always-open">
+
+            <div class="manual-kicker">
+            /em-bee-vee/
+            </div>
+
+            <div class="about-content">
+
+              <p>
+                Launched in 2024, MBV [Massive Brain Volume] is a community-driven 24/7 drum & bass radio station.
+                A continuous, daypart oriented programming dedicated to the sounds of classic 90s and early 2000s.
+              </p>
+
+
+              <ul class="fact-list">
+
+                <li class="fact">
+                  <span class="fact-label">
+                    EST.
+                  </span>
+                  <span class="fact-value">
+                    2024 | Pennsylvania, USA
+                  </span>
+                </li>
+
+                <li class="fact">
+                  <span class="fact-label">
+                    SAY HELLO!
+                  </span>
+                  <span class="fact-value">
+                    mbv@mbvradio.com
+                  </span>
+                </li>
+
+                <li class="fact">
+                  <span class="fact-label">
+                    DEVELOPED BY
+                  </span>
+                  <span class="fact-value">
+                    REDRAS 
+                  </span>
+                </li>
+
+              </ul>
+
+            </div>
+
+          </section>
+
+          <!-- CONTROLS -->
+
+          <section class="about-section manual-section always-open">
+
+            <div class="manual-kicker">
+              SKIN
+            </div>
+
+            <div class="about-content">
+
+              <div
+                class="skin-picker"
+                role="group"
+                aria-label="Site color skin"
+              >
+
+                <button
+                  class="skin-button"
+                  type="button"
+                  data-skin="classic"
+                  style="--skin-color: #f8ca07"
+                  aria-pressed="true"
+                >
+                  CLASSIC
+                </button>
+
+                <button
+                  class="skin-button"
+                  type="button"
+                  data-skin="blue"
+                  style="--skin-color: #1865ba"
+                  aria-pressed="false"
+                >
+                  BLUE
+                </button>
+
+                <button
+                  class="skin-button"
+                  type="button"
+                  data-skin="red"
+                  style="--skin-color: #e22b24"
+                  aria-pressed="false"
+                >
+                  RED
+                </button>
+
+              </div>
+
+            </div>
+
+          </section>
+
+          <!-- CONTROLS -->
+
+          <section class="about-section manual-section always-open">
+            <div class="manual-kicker">
+              CONTROLS
+            </div>
+            <div class="about-content">
+          <pre class="controls-reference">
+            SPACE       PLAY / PAUSE
+            M           MUTE
+            ← →         NAVIGATE</pre>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+
+    <!-- =======================================================
+         MINI PLAYER
+         ======================================================= -->
+
+    <aside
+      id="miniPlayer"
+      class="mini-player"
+      aria-label="MBV mini player"
+    >
+
+      <div class="mini-info">
+
+        <div
+          id="miniShow"
+          class="mini-show"
+        >
+          CONNECTING...
+        </div>
+
+        <div
+          id="miniTrack"
+          class="mini-track"
+        >
+          — — —
+        </div>
+
+      </div>
+
+
+      <div class="mini-controls">
+
+        <button
+          id="miniPlay"
+          class="mini-control"
+          type="button"
+          aria-label="Play"
+        >
+
+          <svg
+            id="miniPlayIcon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+
+            <path
+              d="M8 5 L19 12 L8 19 Z"
+            ></path>
+
+          </svg>
+
+        </button>
+
+
+        <div class="mini-volume-control">
+
+          <button
+            id="miniMute"
+            class="mini-control"
+            type="button"
+            aria-label="Mute"
+          >
+
+          <svg
+            id="miniVolumeIcon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+
+            <path
+              d="M4 9 H8 L13 5 V19 L8 15 H4 Z"
+            ></path>
+
+            <path
+              d="M16 9 C18 11 18 13 16 15"
+              fill="none"
+              stroke-width="1.8"
+            ></path>
+
+          </svg>
+
+          </button>
+
+          <div class="mini-volume-slider-wrap">
+
+            <input
+              id="miniVolumeSlider"
+              class="mini-volume-slider"
+              type="range"
+              min="0"
+              max="100"
+              value="84"
+              aria-label="Mini-player volume"
+            >
+
+          </div>
+
+        </div>
+
+
+        <button
+          id="miniRequest"
+          class="mini-control"
+          type="button"
+          aria-label="Request"
+        >
+
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+
+            <path
+              d="M5 5 H19 V16 H12 L8 19 V16 H5 Z"
+              fill="none"
+              stroke-width="1.7"
+            ></path>
+
+          </svg>
+
+        </button>
+
+      </div>
+
+    </aside>
+
+  </div>
+
+
+  <!-- =========================================================
+       AUDIO
+       ========================================================= -->
+
+  <audio
+    id="audio"
+    preload="none"
+    crossorigin="anonymous"
+  ></audio>
+
+
+  <script>
+
+    /* =========================================================
+       CONFIG
+       ========================================================= */
+
+    const CONFIG = {
+
+      azuraCastBaseUrl:
+        "https://demo.azuracast.com",
+
+      stationShortcode:
+        "1",
+
+      streamUrl:
+        "http://c11.radioboss.fm:8318/autodj",
+
+      scheduleUrl:
+        "https://demo.azuracast.com/api/station/1/schedule",
+
+      nowPlayingInterval:
+        15000
+
+    };
+
+
+    /* =========================================================
+       ELEMENTS
+       ========================================================= */
+
+    const player =
+      document.getElementById("player");
+
+    const audio =
+      document.getElementById("audio");
+
+    const artwork =
+      document.getElementById("artwork");
+
+    const showName =
+      document.getElementById("showName");
+
+    const showIcon =
+      document.getElementById("showIcon");
+
+    const brandLogo =
+      document.getElementById("brandLogo");
+
+    const skinButtons =
+      document.querySelectorAll(
+        ".skin-button"
+      );
+
+    const artist =
+      document.getElementById("artist");
+
+    const trackTitle =
+      document.getElementById("trackTitle");
+
+    const playButton =
+      document.getElementById("playButton");
+
+    const playIcon =
+      document.getElementById("playIcon");
+
+    const muteButton =
+      document.getElementById("muteButton");
+
+    const volumeIcon =
+      document.getElementById("volumeIcon");
+
+    const miniVolumeIcon =
+      document.getElementById("miniVolumeIcon");
+
+    const volumeSlider =
+      document.getElementById("volumeSlider");
+
+    const miniVolumeSlider =
+      document.getElementById("miniVolumeSlider");
+
+    const requestButton =
+      document.getElementById("requestButton");
+
+    const signalCanvas =
+      document.getElementById("signalCanvas");
+
+    const signalLabel =
+      document.getElementById("signalLabel");
+
+    const signalStateIcon =
+      document.getElementById("signalStateIcon");
+
+    const liveCurrentShow =
+      document.getElementById("liveCurrentShow");
+
+    const liveCurrentIcon =
+      document.getElementById("liveCurrentIcon");
+
+    const liveCurrentMood =
+      document.getElementById("liveCurrentMood");
+
+    const liveNextShow =
+      document.getElementById("liveNextShow");
+
+    const liveNextIcon =
+      document.getElementById("liveNextIcon");
+
+    const liveNextMood =
+      document.getElementById("liveNextMood");
+
+    const liveNextCountdown =
+      document.getElementById("liveNextCountdown");
+
+    const currentShowName =
+      document.getElementById("currentShowName");
+
+    const currentShowIcon =
+      document.getElementById("currentShowIcon");
+
+    const currentShowTime =
+      document.getElementById("currentShowTime");
+
+    const currentShowDescription =
+      document.getElementById("currentShowDescription");
+
+    const nextShowName =
+      document.getElementById("nextShowName");
+
+    const nextShowIcon =
+      document.getElementById("nextShowIcon");
+
+    const nextShowTime =
+      document.getElementById("nextShowTime");
+
+    const nextShowDescription =
+      document.getElementById("nextShowDescription");
+
+    const osd =
+      document.getElementById("osd");
+
+    const requestView =
+      document.getElementById("requestView");
+
+    const miniPlayer =
+      document.getElementById("miniPlayer");
+
+    const miniShow =
+      document.getElementById("miniShow");
+
+    const miniTrack =
+      document.getElementById("miniTrack");
+
+    const miniPlay =
+      document.getElementById("miniPlay");
+
+    const miniPlayIcon =
+      document.getElementById("miniPlayIcon");
+
+    const miniMute =
+      document.getElementById("miniMute");
+
+    const miniRequest =
+      document.getElementById("miniRequest");
+
+
+    /* =========================================================
+       STATE
+       ========================================================= */
+
+    let currentView =
+      "live";
+
+    let playerState =
+      "ready";
+
+    let isMuted =
+      false;
+
+    let volume =
+      0.84;
+
+    let requestOpen =
+      false;
+
+    let miniPlayerHasAppeared =
+      false;
+
+    let osdTimer =
+      null;
+
+    let nowPlayingTimer =
+      null;
+
+
+    let audioContext =
+      null;
+
+    let analyser =
+      null;
+
+    let sourceNode =
+      null;
+
+    let signalAnimation =
+      null;
+
+    let currentTrack = {
+
+      artist: "",
+      title: "",
+      show: "CONNECTING...",
+      artwork: "dookie.png"
+
+    };
+
+
+    /* =========================================================
+       NAVIGATION ORDER
+       ========================================================= */
+
+    const viewOrder = [
+      "live",
+      "schedule",
+      "about"
+    ];
+
+
+    const views = {
+
+      live:
+        document.getElementById(
+          "liveView"
+        ),
+
+      schedule:
+        document.getElementById(
+          "scheduleView"
+        ),
+
+      about:
+        document.getElementById(
+          "aboutView"
+        )
+
+    };
+
+
+    const navButtons =
+      document.querySelectorAll(
+        ".nav-button"
+      );
+
+
+    /* =========================================================
+       PLAYER STATE
+       ========================================================= */
+
+    function setPlayerState(
+      nextState
+    ) {
+
+      playerState =
+        nextState;
+
+
+      player.classList.remove(
+        "ready",
+        "playing",
+        "paused",
+        "muted",
+        "buffering",
+        "reconnecting",
+        "offline"
+      );
+
+
+      player.classList.add(
+        nextState
+      );
+
+
+      updateSignalState();
+
+      updateControls();
+
+      updateMiniPlayer();
+
+    }
+
+
+    /* =========================================================
+       MINI PLAYER
+       ========================================================= */
+
+    /*
+      Important:
+      Once the mini player appears outside LIVE/LISTEN, 
+      PAUSED state does NOT hide it.
+
+      It remains present for every playback-related state
+      until the user returns to LIVE.
+    */
+
+    function updateMiniPlayer() {
+
+      if (
+        currentView === "live"
+      ) {
+
+        miniPlayerHasAppeared =
+          false;
+
+        miniPlayer.classList.remove(
+          "visible"
+        );
+
+        return;
+      }
+
+
+      /*
+        Audio has become relevant outside LIVE.
+
+        PAUSED is intentionally included.
+      */
+
+      const shouldAppear =
+        [
+          "playing",
+          "muted",
+          "paused",
+          "buffering",
+          "reconnecting"
+        ].includes(
+          playerState
+        );
+
+
+      if (shouldAppear) {
+        miniPlayerHasAppeared =
+          true;
+      }
+
+
+      miniPlayer.classList.toggle(
+        "visible",
+        miniPlayerHasAppeared
+      );
+
+
+      miniShow.textContent =
+        currentTrack.show ||
+        "CONNECTING TO MBV";
+
+
+      if (
+        currentTrack.artist ||
+        currentTrack.title
+      ) {
+
+        miniTrack.textContent =
+          `${currentTrack.artist} — ${currentTrack.title}`;
+
+      } else {
+
+        miniTrack.textContent =
+          "-";
+
+      }
+
+    }
+
+
+    /* =========================================================
+       PLAY ICON
+       ========================================================= */
+
+    function setPlayIcon(
+      playing
+    ) {
+
+      if (playing) {
+
+        playIcon.innerHTML = `
+          <path d="M7 5 H10 V19 H7 Z"></path>
+          <path d="M14 5 H17 V19 H14 Z"></path>
+        `;
+
+
+        miniPlayIcon.innerHTML = `
+          <path d="M7 5 H10 V19 H7 Z"></path>
+          <path d="M14 5 H17 V19 H14 Z"></path>
+        `;
+
+
+        playButton.setAttribute(
+          "aria-label",
+          "Pause"
+        );
+
+
+        playButton.title =
+          "Pause";
+
+      } else {
+
+        playIcon.innerHTML = `
+          <path d="M8 5 L19 12 L8 19 Z"></path>
+        `;
+
+
+        miniPlayIcon.innerHTML = `
+          <path d="M8 5 L19 12 L8 19 Z"></path>
+        `;
+
+
+        playButton.setAttribute(
+          "aria-label",
+          "Play"
+        );
+
+
+        playButton.title =
+          "Play";
+      }
+
+    }
+
+
+    /* =========================================================
+       VOLUME ICON
+       ========================================================= */
+
+    function setVolumeIcon() {
+
+      if (
+        isMuted ||
+        volume === 0
+      ) {
+
+        const icon = `
+          <path
+            d="M4 9 H8 L13 5 V19 L8 15 H4 Z"
+          ></path>
+
+          <path
+            d="M16 9 L21 15"
+            fill="none"
+            stroke-width="1.8"
+          ></path>
+
+          <path
+            d="M21 9 L16 15"
+            fill="none"
+            stroke-width="1.8"
+          ></path>
+        `;
+
+        volumeIcon.innerHTML = icon;
+        miniVolumeIcon.innerHTML = icon;
+
+      } else {
+
+        const icon = `
+          <path
+            d="M4 9 H8 L13 5 V19 L8 15 H4 Z"
+          ></path>
+
+          <path
+            d="M16 9 C18 11 18 13 16 15"
+            fill="none"
+            stroke-width="1.8"
+          ></path>
+
+          <path
+            d="M18.5 6.8 C22 10 22 14 18.5 17.2"
+            fill="none"
+            stroke-width="1.8"
+          ></path>
+        `;
+
+        volumeIcon.innerHTML = icon;
+        miniVolumeIcon.innerHTML = icon;
+      }
+
+    }
+
+
+    /* =========================================================
+       CONTROLS
+       ========================================================= */
+
+    function updateControls() {
+
+      const playing =
+        playerState === "playing" ||
+        playerState === "muted";
+
+
+      setPlayIcon(
+        playing
+      );
+
+
+      setVolumeIcon();
+
+
+      miniMute.setAttribute(
+        "aria-label",
+        isMuted
+          ? "Unmute"
+          : "Mute"
+      );
+
+    }
+
+
+    /* =========================================================
+       SIGNAL STATE
+       ========================================================= */
+
+    function getConnectionIcon(
+      state
+    ) {
+
+      if (
+        state === "offline"
+      ) {
+        return `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3 22 21H2L12 3Z"></path>
+            <path d="M12 9v5M12 18h.01"></path>
+          </svg>
+        `;
+      }
+
+      if (
+        state === "loading" ||
+        state === "reconnecting"
+      ) {
+        return `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"></path>
+          </svg>
+        `;
+      }
+
+      return "";
+
+    }
+
+    function updateSignalState() {
+
+      /*
+        Artist/title NEVER enters this label.
+      */
+
+      switch (
+        playerState
+      ) {
+
+        case "loading":
+
+          signalLabel.textContent =
+            "CONNECTING";
+
+          break;
+
+
+        case "ready":
+
+          signalLabel.textContent =
+            "READY";
+
+          break;
+
+
+        case "playing":
+
+          signalLabel.textContent =
+            "PLAYING";
+
+          break;
+
+
+        case "muted":
+
+          signalLabel.textContent =
+            "MUTED";
+
+          break;
+
+
+        case "paused":
+
+          signalLabel.textContent =
+            "PAUSED";
+
+          break;
+
+
+        case "buffering":
+
+          signalLabel.textContent =
+            "BUFFERING";
+
+          break;
+
+
+        case "reconnecting":
+
+          signalLabel.textContent =
+            "RECONNECTING…";
+
+          break;
+
+
+        case "offline":
+
+          signalLabel.textContent =
+            "STATION OFFLINE";
+
+          break;
+
+
+        default:
+
+          signalLabel.textContent =
+            "READY";
+      }
+
+      signalStateIcon.innerHTML =
+        getConnectionIcon(
+          playerState
+        );
+
+    }
+
+
+    /* =========================================================
+       OSD
+       ========================================================= */
+
+    function showOSD(
+      message
+    ) {
+
+      clearTimeout(
+        osdTimer
+      );
+
+
+      osd.textContent =
+        message;
+
+
+      osd.classList.add(
+        "visible"
+      );
+
+
+      osdTimer =
+        setTimeout(
+          () => {
+
+            osd.classList.remove(
+              "visible"
+            );
+
+          },
+          1100
+        );
+
+    }
+
+
+    /* =========================================================
+       AUDIO CONTEXT / ANALYSER
+       ========================================================= */
+
+    function initializeAudioAnalyser() {
+
+      if (
+        audioContext
+      ) {
+        return;
+      }
+
+
+      try {
+
+        audioContext =
+          new (
+            window.AudioContext ||
+            window.webkitAudioContext
+          )();
+
+
+        analyser =
+          audioContext.createAnalyser();
+
+
+        analyser.fftSize =
+          512;
+
+
+        analyser.smoothingTimeConstant =
+          0.55;
+
+
+        sourceNode =
+          audioContext.createMediaElementSource(
+            audio
+          );
+
+
+        sourceNode.connect(
+          analyser
+        );
+
+
+        analyser.connect(
+          audioContext.destination
+        );
+
+
+        startSignalAnimation();
+
+      } catch (error) {
+
+        console.warn(
+          "Audio analyser could not be initialized:",
+          error
+        );
+
+      }
+
+    }
+
+
+    function startSignalAnimation() {
+
+      if (
+        signalAnimation
+      ) {
+        cancelAnimationFrame(
+          signalAnimation
+        );
+      }
+
+
+      drawSignal();
+
+    }
+
+
+    function drawSignal() {
+
+      signalAnimation =
+        requestAnimationFrame(
+          drawSignal
+        );
+
+
+      const canvas =
+        signalCanvas;
+
+
+      const rect =
+        canvas.getBoundingClientRect();
+
+
+      const dpr =
+        window.devicePixelRatio ||
+        1;
+
+
+      const width =
+        Math.max(
+          1,
+          Math.floor(
+            rect.width * dpr
+          )
+        );
+
+
+      const height =
+        Math.max(
+          1,
+          Math.floor(
+            rect.height * dpr
+          )
+        );
+
+
+      if (
+        canvas.width !== width ||
+        canvas.height !== height
+      ) {
+
+        canvas.width =
+          width;
+
+        canvas.height =
+          height;
+      }
+
+
+      const ctx =
+        canvas.getContext(
+          "2d"
+        );
+
+
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+
+      const centerX =
+        width / 2;
+
+      const centerY =
+        height / 2;
+
+      const baseRadius =
+        Math.min(width, height) / 2 - 8 * dpr;
+
+      ctx.beginPath();
+
+      ctx.arc(
+        centerX,
+        centerY,
+        baseRadius,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.strokeStyle =
+        "#333";
+
+      ctx.lineWidth =
+        dpr;
+
+      ctx.stroke();
+
+
+      /*
+        When no actual playback is occurring,
+        show a restrained flat signal rather than
+        pretending audio exists.
+      */
+
+      const active =
+        (
+          playerState === "playing" ||
+          playerState === "muted"
+        );
+
+
+      if (
+        !active ||
+        !analyser
+      ) {
+
+        return;
+      }
+
+
+      const data =
+        new Uint8Array(
+          analyser.fftSize
+        );
+
+
+      analyser.getByteTimeDomainData(
+        data
+      );
+
+
+      ctx.beginPath();
+
+
+      for (
+        let i = 0;
+        i < data.length;
+        i++
+      ) {
+
+        const normalized =
+          data[i] / 128.0;
+
+
+        const amplitude =
+          12 * dpr;
+
+        const angle =
+          -Math.PI / 2 +
+          (Math.PI * 2 * i) / data.length;
+
+        const radius =
+          baseRadius +
+          (normalized - 1) * amplitude;
+
+        const x =
+          centerX +
+          Math.cos(angle) * radius;
+
+        const y =
+          centerY +
+          Math.sin(angle) * radius;
+
+
+        if (
+          i === 0
+        ) {
+
+          ctx.moveTo(
+            x,
+            y
+          );
+
+        } else {
+
+          ctx.lineTo(
+            x,
+            y
+          );
+        }
+
+
+      }
+
+      ctx.closePath();
+
+
+      ctx.strokeStyle =
+        getComputedStyle(document.body)
+          .getPropertyValue("--yellow")
+          .trim() || "#f8ca07";
+
+      ctx.lineWidth =
+        1.6 * dpr;
+
+      ctx.lineCap =
+        "round";
+
+      ctx.lineJoin =
+        "round";
+
+      ctx.stroke();
+
+    }
+
+
+    /* =========================================================
+       PLAYBACK
+       ========================================================= */
+
+    async function togglePlayback() {
+
+      initializeAudioAnalyser();
+
+
+      if (
+        audioContext &&
+        audioContext.state === "suspended"
+      ) {
+
+        await audioContext.resume();
+
+      }
+
+
+      if (
+        audio.paused
+      ) {
+
+        try {
+
+          setPlayerState(
+            "loading"
+          );
+
+
+          await audio.play();
+
+
+          setPlayerState(
+            isMuted
+              ? "muted"
+              : "playing"
+          );
+
+
+          showOSD(
+            "PLAY"
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Playback failed:",
+            error
+          );
+
+
+          setPlayerState(
+            "ready"
+          );
+
+
+          showOSD(
+            "PRESS PLAY TO CONNECT"
+          );
+
+        }
+
+      } else {
+
+        audio.pause();
+
+
+        setPlayerState(
+          "paused"
+        );
+
+
+        showOSD(
+          "PAUSED"
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       MUTE
+       ========================================================= */
+
+    function toggleMute() {
+
+      const wasPlaying =
+        !audio.paused;
+
+
+      isMuted =
+        !isMuted;
+
+
+      audio.muted =
+        isMuted;
+
+
+      if (
+        isMuted
+      ) {
+
+        setPlayerState(
+          wasPlaying
+            ? "muted"
+            : "paused"
+        );
+
+
+        showOSD(
+          "MUTED"
+        );
+
+      } else {
+
+        setPlayerState(
+          wasPlaying
+            ? "playing"
+            : "paused"
+        );
+
+
+        showOSD(
+          `VOLUME ${Math.round(volume * 100)}%`
+        );
+
+      }
+
+
+      if (
+        wasPlaying &&
+        audio.paused
+      ) {
+        audio.play().catch(
+          error => {
+            console.warn(
+              "Playback resume after mute failed:",
+              error
+            );
+          }
+        );
+      }
+
+
+      setVolumeIcon();
+
+    }
+
+
+    /* =========================================================
+       VOLUME
+       ========================================================= */
+
+    function setVolume(
+      value
+    ) {
+
+      volume =
+        Math.max(
+          0,
+          Math.min(
+            1,
+            value
+          )
+        );
+
+
+      const usesDeviceVolume =
+        window.matchMedia(
+          "(hover: none), (pointer: coarse)"
+        ).matches;
+
+      audio.volume =
+        usesDeviceVolume
+          ? 1
+          : volume;
+
+
+      if (
+        volume > 0 &&
+        isMuted
+      ) {
+
+        isMuted =
+          false;
+
+        audio.muted =
+          false;
+
+        setPlayerState(
+          audio.paused
+            ? "paused"
+            : "playing"
+        );
+
+      }
+
+
+      volumeSlider.value =
+        Math.round(
+          volume * 100
+        );
+
+      miniVolumeSlider.value =
+        Math.round(
+          volume * 100
+        );
+
+
+      setVolumeIcon();
+
+
+      showOSD(
+        `VOLUME ${Math.round(volume * 100)}%`
+      );
+
+    }
+
+
+    /* =========================================================
+       AUDIO EVENTS
+       ========================================================= */
+
+    audio.addEventListener(
+      "play",
+      () => {
+
+        initializeAudioAnalyser();
+
+      }
+    );
+
+
+    audio.addEventListener(
+      "playing",
+      () => {
+
+        setPlayerState(
+          isMuted
+            ? "muted"
+            : "playing"
+        );
+
+      }
+    );
+
+
+    audio.addEventListener(
+      "pause",
+      () => {
+
+        /*
+          PAUSED is a legitimate persistent player state.
+          It must not hide the mini player.
+        */
+
+        if (
+          playerState !== "offline"
+        ) {
+
+          setPlayerState(
+            "paused"
+          );
+
+        }
+
+      }
+    );
+
+
+    audio.addEventListener(
+      "waiting",
+      () => {
+
+        if (
+          !audio.paused
+        ) {
+
+          setPlayerState(
+            "buffering"
+          );
+
+        }
+
+      }
+    );
+
+
+    audio.addEventListener(
+      "stalled",
+      () => {
+
+        if (
+          !audio.paused
+        ) {
+
+          setPlayerState(
+            "reconnecting"
+          );
+
+        }
+
+      }
+    );
+
+
+    audio.addEventListener(
+      "error",
+      () => {
+
+        if (audio.error) {
+          setPlayerState(
+            "offline"
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       BUTTON EVENTS
+       ========================================================= */
+
+    playButton.addEventListener(
+      "click",
+      togglePlayback
+    );
+
+
+    miniPlay.addEventListener(
+      "click",
+      togglePlayback
+    );
+
+
+    muteButton.addEventListener(
+      "click",
+      toggleMute
+    );
+
+
+    miniMute.addEventListener(
+      "click",
+      toggleMute
+    );
+
+
+    volumeSlider.addEventListener(
+      "input",
+      event => {
+
+        setVolume(
+          Number(
+            event.target.value
+          ) / 100
+        );
+
+      }
+    );
+
+    miniVolumeSlider.addEventListener(
+      "input",
+      event => {
+        setVolume(
+          Number(
+            event.target.value
+          ) / 100
+        );
+      }
+    );
+
+
+    /* =========================================================
+       NAVIGATION
+       ========================================================= */
+
+    function navigateTo(
+      viewName
+    ) {
+
+      if (
+        !views[viewName]
+      ) {
+        return;
+      }
+
+
+      currentView =
+        viewName;
+
+
+      Object.entries(
+        views
+      ).forEach(
+        ([name, element]) => {
+
+          element.classList.toggle(
+            "active",
+            name === viewName
+          );
+
+        }
+      );
+
+
+      navButtons.forEach(
+        button => {
+
+          button.classList.toggle(
+            "active",
+            button.dataset.view ===
+            viewName
+          );
+
+        }
+      );
+
+
+      /*
+        Returning to LIVE removes the mini player.
+
+        Leaving LIVE does NOT automatically create it;
+        it appears as soon as there is an established
+        playback state.
+      */
+
+      updateMiniPlayer();
+
+
+      if (
+        viewName === "live"
+      ) {
+
+        if (
+          requestOpen
+        ) {
+
+          closeRequest();
+
+        }
+
+      }
+
+    }
+
+
+    navButtons.forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            navigateTo(
+              button.dataset.view
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       LEFT / RIGHT ARROW NAVIGATION
+       ========================================================= */
+
+    function navigateRelative(
+      direction
+    ) {
+
+      const currentIndex =
+        viewOrder.indexOf(
+          currentView
+        );
+
+
+      if (
+        currentIndex === -1
+      ) {
+        return;
+      }
+
+
+      let nextIndex =
+        currentIndex +
+        direction;
+
+
+      /*
+        Wrap around:
+        ← from LIVE -> ABOUT
+        → from ABOUT -> LIVE
+      */
+
+      if (
+        nextIndex < 0
+      ) {
+
+        nextIndex =
+          viewOrder.length - 1;
+
+      }
+
+
+      if (
+        nextIndex >=
+        viewOrder.length
+      ) {
+
+        nextIndex =
+          0;
+
+      }
+
+
+      navigateTo(
+        viewOrder[nextIndex]
+      );
+
+    }
+
+
+    /* =========================================================
+       KEYBOARD
+       ========================================================= */
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Escape" &&
+          requestOpen
+        ) {
+
+          event.preventDefault();
+          closeRequest();
+
+          return;
+        }
+
+        /*
+          Never intercept keyboard navigation while typing.
+        */
+
+        const tag =
+          document.activeElement?.tagName;
+
+
+        if (
+          tag === "INPUT" ||
+          tag === "TEXTAREA" ||
+          tag === "SELECT"
+        ) {
+
+          return;
+
+        }
+
+
+        /*
+          Request mode suspends shortcuts.
+        */
+
+        if (
+          requestOpen
+        ) {
+
+          return;
+
+        }
+
+
+        switch (
+          event.key
+        ) {
+
+          case " ":
+
+            event.preventDefault();
+
+            togglePlayback();
+
+            break;
+
+
+          case "m":
+          case "M":
+
+            event.preventDefault();
+
+            toggleMute();
+
+            break;
+
+
+          case "ArrowLeft":
+
+            event.preventDefault();
+
+            navigateRelative(
+              -1
+            );
+
+            break;
+
+
+          case "ArrowRight":
+
+            event.preventDefault();
+
+            navigateRelative(
+              1
+            );
+
+            break;
+
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       REQUEST
+       ========================================================= */
+
+    function openRequest() {
+
+      requestOpen =
+        true;
+
+      player.classList.add(
+        "requesting"
+      );
+
+
+      osd.style.display =
+        "none";
+
+
+      requestView.hidden =
+        false;
+
+
+      document
+        .getElementById(
+          "requestName"
+        )
+        .focus();
+
+    }
+
+
+    function closeRequest() {
+
+      requestOpen =
+        false;
+
+      player.classList.remove(
+        "requesting"
+      );
+
+
+      osd.style.display =
+        "";
+
+
+      requestView.hidden =
+        true;
+
+      requestButton.focus();
+
+    }
+
+
+    requestButton.addEventListener(
+      "click",
+      openRequest
+    );
+
+
+    miniRequest.addEventListener(
+      "click",
+      () => {
+
+        /*
+          Open request from the mini player while retaining
+          the current audio state.
+        */
+
+        const previousView =
+          currentView;
+
+
+        if (
+          previousView !== "live"
+        ) {
+
+          navigateTo(
+            "live"
+          );
+
+        }
+
+
+        requestView.dataset.returnView =
+          previousView;
+
+
+        openRequest();
+
+      }
+    );
+
+
+    document
+      .getElementById(
+        "cancelRequest"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          const returnView =
+            requestView.dataset.returnView;
+
+
+          closeRequest();
+
+
+          if (
+            returnView &&
+            returnView !== "live"
+          ) {
+
+            navigateTo(
+              returnView
+            );
+
+          }
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "sendRequest"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          const button =
+            document.getElementById(
+              "sendRequest"
+            );
+
+
+          /*
+            Connect the actual AzuraCast request endpoint
+            here when request submission is configured.
+          */
+
+          button.textContent =
+            "REQUEST SENT";
+
+
+          showOSD(
+            "REQUEST SENT"
+          );
+
+
+          setTimeout(
+            () => {
+
+              button.textContent =
+                "SEND";
+
+
+              document
+                .getElementById(
+                  "requestName"
+                )
+                .value = "";
+
+
+              document
+                .getElementById(
+                  "requestMessage"
+                )
+                .value = "";
+
+
+              const returnView =
+                requestView.dataset.returnView;
+
+
+              closeRequest();
+
+
+              if (
+                returnView &&
+                returnView !== "live"
+              ) {
+
+                navigateTo(
+                  returnView
+                );
+
+              }
+
+            },
+            900
+          );
+
+        }
+      );
+
+
+    /* =========================================================
+       AZURACAST NOW PLAYING
+       ========================================================= */
+
+    function getNowPlayingUrl() {
+
+      return (
+        CONFIG.azuraCastBaseUrl
+          .replace(
+            /\/$/,
+            ""
+          ) +
+        "/api/nowplaying/" +
+        encodeURIComponent(
+          CONFIG.stationShortcode
+        )
+      );
+
+    }
+
+
+    async function fetchNowPlaying() {
+
+      if (
+        CONFIG.azuraCastBaseUrl.includes(
+          "YOUR-AZURACAST"
+        ) ||
+        CONFIG.stationShortcode.includes(
+          "YOUR_STATION"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      try {
+
+        const response =
+          await fetch(
+            getNowPlayingUrl(),
+            {
+              cache:
+                "no-store"
+            }
+          );
+
+
+        if (
+          !response.ok
+        ) {
+
+          throw new Error(
+            `HTTP ${response.status}`
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        applyNowPlaying(
+          data
+        );
+
+
+      } catch (
+        error
+      ) {
+
+        console.error(
+          "AzuraCast Now Playing error:",
+          error
+        );
+
+      }
+
+    }
+
+
+    function applyNowPlaying(
+      data
+    ) {
+
+      const np =
+        data?.now_playing;
+
+
+      const song =
+        np?.song;
+
+
+      renderRecentTracks(
+        data.song_history ||
+        np?.song_history ||
+        []
+      );
+
+
+      /*
+        Do not fabricate metadata.
+
+        Until AzuraCast actually supplies it,
+        the UI remains — / — rather than showing
+        placeholder metadata as though it were real.
+      */
+
+      if (
+        !song
+      ) {
+
+        return;
+
+      }
+
+
+      const newArtist =
+        song.artist ||
+        "";
+
+
+      const newTitle =
+        song.title ||
+        "";
+
+
+      const newArtwork =
+        song.art ||
+        currentTrack.artwork;
+
+
+      const newShow =
+        np?.playlist ||
+        np?.streamer_name ||
+        currentTrack.show ||
+        "MBV";
+
+      const hadTrack =
+        Boolean(
+          currentTrack.artist &&
+          currentTrack.title
+        );
+
+
+      const changed =
+        newArtist !==
+          currentTrack.artist ||
+        newTitle !==
+          currentTrack.title;
+
+
+      currentTrack = {
+
+        artist:
+          newArtist,
+
+        title:
+          newTitle,
+
+        show:
+          newShow,
+
+        artwork:
+          newArtwork
+
+      };
+
+
+      /*
+        Metadata updates together.
+      */
+
+      artist.textContent =
+        currentTrack.artist ||
+        "—";
+
+
+      trackTitle.textContent =
+        currentTrack.title ||
+        "—";
+
+
+      showName.textContent =
+        currentTrack.show;
+
+      showIcon.innerHTML =
+        getShowIcon(
+          currentTrack.show,
+          new Date().getHours()
+        );
+
+
+      miniShow.textContent =
+        currentTrack.show;
+
+
+      miniTrack.textContent =
+        currentTrack.artist &&
+        currentTrack.title
+
+          ? `${currentTrack.artist} — ${currentTrack.title}`
+
+          : "—";
+
+
+      if (
+        newArtwork &&
+        artwork.src !==
+          newArtwork
+      ) {
+
+        artwork.src =
+          newArtwork;
+
+      }
+
+
+      if (
+        changed &&
+        hadTrack &&
+        currentTrack.artist &&
+        currentTrack.title
+      ) {
+
+        showOSD(
+          `${currentTrack.artist} — ${currentTrack.title}`
+        );
+
+      }
+
+
+      updateMiniPlayer();
+
+    }
+
+
+    function startNowPlayingPolling() {
+
+      clearInterval(
+        nowPlayingTimer
+      );
+
+
+      fetchNowPlaying();
+
+
+      nowPlayingTimer =
+        setInterval(
+          fetchNowPlaying,
+          CONFIG.nowPlayingInterval
+        );
+
+    }
+
+
+    /* =========================================================
+       SCHEDULE
+       ========================================================= */
+
+    function getShowIcon(
+      name,
+      startHour
+    ) {
+
+      const label =
+        String(name || "").toLowerCase();
+
+      if (
+        label.includes("night") ||
+        Number(startHour) >= 21 ||
+        Number(startHour) < 3
+      ) {
+        return `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M19 15.5A8 8 0 0 1 8.5 5a8.5 8.5 0 1 0 10.5 10.5Z"></path>
+            <path d="M17 4v3M15.5 5.5h3"></path>
+          </svg>
+        `;
+      }
+
+      if (
+        label.includes("dusk") ||
+        Number(startHour) >= 18
+      ) {
+        return `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 18h18"></path>
+            <path d="M5 18a7 7 0 0 1 14 0"></path>
+            <path d="M12 3v3M4.9 7.9l2.1 2.1M19.1 7.9L17 10"></path>
+          </svg>
+        `;
+      }
+
+      if (
+        label.includes("chill") ||
+        Number(startHour) < 7
+      ) {
+        return `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 17h13a3 3 0 0 0 .4-6A5.5 5.5 0 0 0 8 9.2 4 4 0 0 0 5 17Z"></path>
+            <path d="M8 20h8M11 22h4"></path>
+          </svg>
+        `;
+      }
+
+      if (
+        label.includes("day") ||
+        Number(startHour) < 18
+      ) {
+        return `
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+          </svg>
+        `;
+      }
+
+      return `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="8"></circle>
+          <path d="M12 8v4l3 2"></path>
+        </svg>
+      `;
+
+    }
+
+    let scheduleData = [
+
+      {
+        name:
+          "AYE, M!",
+
+        start:
+          0,
+
+        end:
+          5,
+
+        description:
+          "ATMOSPHERIC / DOWNTEMPO / JUNGLE CLASSICS",
+
+        type:
+          ""
+      },
+
+
+
+      {
+        name:
+          "DAYBREAK",
+
+        start:
+          5,
+
+        end:
+          10,
+
+        description:
+          "DEEP / LIQUID / SOULFUL",
+
+        type:
+          ""
+      },
+
+
+      {
+        name:
+          "CRUISE",
+
+        start:
+          10,
+
+        end:
+          16,
+
+        description:
+          "ROLLING / GROOVY",
+
+        type:
+          ""
+      },
+
+
+      {
+        name:
+          "DUSK DRIVE",
+
+        start:
+          16,
+
+        end:
+          20,
+
+        description:
+          "ENERGETIC / DANCEFLOOR / DRIVING",
+
+        type:
+          ""
+      },
+
+
+      {
+        name:
+          "NIGHT SHIFT",
+
+        start:
+          20,
+
+        end:
+          24,
+
+        description:
+          "DARK / HEAVY / NEURO",
+
+        type:
+          ""
+      }
+
+    ];
+
+
+    function formatHour(
+      hour
+    ) {
+
+      const normalized =
+        hour % 24;
+
+
+      return (
+        String(
+          normalized
+        ).padStart(
+          2,
+          "0"
+        ) +
+        ":00"
+      );
+
+    }
+
+
+    function createSchedule() {
+
+      const timelineHours =
+        document.getElementById(
+          "timelineHours"
+        );
+
+
+      const dayparts =
+        document.getElementById(
+          "dayparts"
+        );
+
+
+      timelineHours.innerHTML =
+        "";
+
+
+      for (
+        let hour = 0;
+        hour < 24;
+        hour++
+      ) {
+
+        const cell =
+          document.createElement(
+            "div"
+          );
+
+
+        cell.className =
+          "hour";
+
+
+        if (
+          [
+            0,
+            3,
+            7,
+            12,
+            18,
+            21
+          ].includes(
+            hour
+          )
+        ) {
+
+          cell.classList.add(
+            "major"
+          );
+
+        }
+
+
+        const label =
+          document.createElement(
+            "span"
+          );
+
+
+        label.textContent =
+          String(
+            hour
+          ).padStart(
+            2,
+            "0"
+          );
+
+
+        cell.appendChild(
+          label
+        );
+
+
+        timelineHours.appendChild(
+          cell
+        );
+
+      }
+
+
+      dayparts.innerHTML =
+        "";
+
+
+      scheduleData.forEach(
+        part => {
+
+          const element =
+            document.createElement(
+              "article"
+            );
+
+
+          element.className =
+            "daypart";
+
+          const start =
+            Math.max(0, Math.min(24, Number(part.start)));
+
+          const end =
+            Math.max(start, Math.min(24, Number(part.end)));
+
+          element.style.left =
+            `${(start / 24) * 100}%`;
+
+          element.style.width =
+            `${((end - start) / 24) * 100}%`;
+
+
+          const name =
+            document.createElement(
+              "div"
+            );
+
+
+          name.className =
+            "daypart-name";
+
+
+          const icon =
+            document.createElement(
+              "span"
+            );
+
+          icon.className =
+            "daypart-icon";
+
+          icon.setAttribute(
+            "aria-hidden",
+            "true"
+          );
+
+          icon.innerHTML =
+            getShowIcon(
+              part.name,
+              part.start
+            );
+
+
+          const nameText =
+            document.createElement(
+              "span"
+            );
+
+          nameText.textContent =
+            part.name;
+
+          name.appendChild(
+            icon
+          );
+
+          name.appendChild(
+            nameText
+          );
+
+
+          const time =
+            document.createElement(
+              "span"
+            );
+
+
+          time.className =
+            "daypart-time";
+
+
+          time.textContent =
+            `${formatHour(part.start)} — ${formatHour(part.end)}`;
+
+
+          const detail =
+            document.createElement(
+              "div"
+            );
+
+
+          detail.className =
+            "daypart-detail";
+
+
+          const description =
+            document.createElement(
+              "div"
+            );
+
+
+          description.className =
+            "daypart-description";
+
+
+          description.textContent =
+            part.description;
+
+
+          const type =
+            document.createElement(
+              "div"
+            );
+
+
+          type.className =
+            "daypart-type";
+
+
+          type.textContent =
+            part.type;
+
+
+          detail.appendChild(
+            description
+          );
+
+
+          detail.appendChild(
+            type
+          );
+
+
+          element.appendChild(
+            name
+          );
+
+
+          element.appendChild(
+            time
+          );
+
+
+          element.appendChild(
+            detail
+          );
+
+
+          element.addEventListener(
+            "click",
+            () => {
+
+              document
+                .querySelectorAll(
+                  ".daypart.open"
+                )
+                .forEach(
+                  openPart => {
+
+                    if (
+                      openPart !==
+                      element
+                    ) {
+
+                      openPart.classList.remove(
+                        "open"
+                      );
+
+                    }
+
+                  }
+                );
+
+
+              element.classList.toggle(
+                "open"
+              );
+
+            }
+          );
+
+
+          dayparts.appendChild(
+            element
+          );
+
+        }
+      );
+
+      updateScheduleSpotlight();
+
+    }
+
+
+    function formatScheduleRange(
+      part
+    ) {
+
+      return `${formatHour(part.start)} — ${formatHour(part.end)}`;
+
+    }
+
+
+    function formatStartCountdown(
+      startHour
+    ) {
+
+      const now =
+        new Date();
+
+      const currentMinutes =
+        now.getHours() * 60 +
+        now.getMinutes();
+
+      const startMinutes =
+        Number(startHour) * 60;
+
+      const minutesUntil =
+        (startMinutes - currentMinutes + 1440) % 1440;
+
+      if (
+        minutesUntil === 0
+      ) {
+        return "STARTING NOW";
+      }
+
+      const hours =
+        Math.floor(minutesUntil / 60);
+
+      const minutes =
+        minutesUntil % 60;
+
+      return hours > 0
+        ? `STARTS IN ${hours}H ${minutes}M`
+        : `STARTS IN ${minutes}M`;
+
+    }
+
+
+    function updateScheduleSpotlight() {
+
+      if (
+        !scheduleData.length
+      ) {
+        currentShowName.textContent =
+          "Schedule unavailable";
+
+        currentShowIcon.innerHTML =
+          getShowIcon("", 12);
+
+        currentShowTime.textContent =
+          "--:--";
+
+        currentShowDescription.textContent =
+          "Station schedule data is not available right now.";
+
+        nextShowName.textContent =
+          "Check back soon";
+
+        nextShowIcon.innerHTML =
+          getShowIcon("", 12);
+
+        nextShowTime.textContent =
+          "--:--";
+
+        nextShowDescription.textContent =
+          "";
+
+        liveCurrentShow.textContent =
+          "Connecting to MBV";
+
+        liveCurrentMood.textContent =
+          "24/7 autonomous radio";
+
+        liveCurrentIcon.innerHTML =
+          getShowIcon("", 12);
+
+        liveNextShow.textContent =
+          "Schedule unavailable";
+
+        liveNextMood.textContent =
+          "Daypart information will return soon";
+
+        liveNextIcon.innerHTML =
+          getShowIcon("", 12);
+
+        liveNextCountdown.textContent =
+          "STARTS IN --";
+
+        return;
+      }
+
+
+      const now =
+        new Date();
+
+      const currentHour =
+        now.getHours() + now.getMinutes() / 60;
+
+      const currentIndex =
+        scheduleData.findIndex(
+          part =>
+            currentHour >= Number(part.start) &&
+            currentHour < Number(part.end)
+        );
+
+      const nextCandidates =
+        scheduleData
+          .map((part, index) => ({
+            part,
+            index,
+            distance:
+              (Number(part.start) - currentHour + 24) % 24
+          }))
+          .filter(item => item.index !== currentIndex)
+          .sort((a, b) => a.distance - b.distance);
+
+      const current =
+        currentIndex >= 0
+          ? scheduleData[currentIndex]
+          : null;
+
+      const next =
+        nextCandidates[0]?.part ||
+        scheduleData[0];
+
+      currentShowName.textContent =
+        current?.name ||
+        "Between shows";
+
+      currentShowIcon.innerHTML =
+        getShowIcon(
+          current?.name,
+          current?.start
+        );
+
+      currentShowTime.textContent =
+        current
+          ? formatScheduleRange(current)
+          : "No show is scheduled right now";
+
+      currentShowDescription.textContent =
+        current?.description ||
+        "The next scheduled broadcast is coming up.";
+
+      nextShowName.textContent =
+        next.name;
+
+      nextShowIcon.innerHTML =
+        getShowIcon(
+          next.name,
+          next.start
+        );
+
+      nextShowTime.textContent =
+        formatScheduleRange(next);
+
+      nextShowDescription.textContent =
+        next.description ||
+        next.type;
+
+      liveCurrentShow.textContent =
+        current?.name ||
+        "Between dayparts";
+
+      liveCurrentMood.textContent =
+        current?.description ||
+        "24/7 autonomous radio";
+
+      liveCurrentIcon.innerHTML =
+        getShowIcon(
+          current?.name,
+          current?.start
+        );
+
+      liveNextShow.textContent =
+        next.name;
+
+      liveNextMood.textContent =
+        next.description ||
+        "Next time-of-day mood";
+
+      liveNextIcon.innerHTML =
+        getShowIcon(
+          next.name,
+          next.start
+        );
+
+      liveNextCountdown.textContent =
+        formatStartCountdown(
+          next.start
+        );
+
+      Array.from(
+        document.querySelectorAll(
+          ".daypart"
+        )
+      ).forEach(
+        (element, index) => {
+          element.classList.toggle(
+            "active",
+            index === currentIndex
+          );
+        }
+      );
+
+    }
+
+
+    async function fetchSchedule() {
+
+      const parseScheduleDate = value => {
+        const numericValue = Number(value);
+
+        return new Date(
+          Number.isFinite(numericValue) && numericValue > 0
+            ? numericValue < 100000000000
+              ? numericValue * 1000
+              : numericValue
+            : value
+        );
+      };
+
+      try {
+
+        const response =
+          await fetch(
+            CONFIG.scheduleUrl,
+            {
+              cache:
+                "no-store"
+            }
+          );
+
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+
+        const data =
+          await response.json();
+
+
+        const entries =
+          Array.isArray(data)
+            ? data
+            : data.schedule || data.data || [];
+
+
+        const parsed =
+          entries
+            .map(entry => {
+              const startDate =
+                parseScheduleDate(
+                  entry.start || entry.start_timestamp
+                );
+
+              const endDate =
+                parseScheduleDate(
+                  entry.end || entry.end_timestamp
+                );
+
+              if (
+                Number.isNaN(startDate.getTime()) ||
+                Number.isNaN(endDate.getTime())
+              ) {
+                return null;
+              }
+
+
+              const start =
+                startDate.getHours() + startDate.getMinutes() / 60;
+
+              const parsedEnd =
+                endDate.getHours() + endDate.getMinutes() / 60;
+
+              return {
+                name:
+                  entry.name || entry.program_name || "UNTITLED",
+
+                start,
+
+                end:
+                  parsedEnd <= start
+                    ? 24
+                    : parsedEnd,
+
+                description:
+                  entry.description || "",
+
+                type:
+                  entry.type || "SCHEDULED BROADCAST"
+              };
+            })
+            .filter(Boolean);
+
+
+        if (parsed.length) {
+          scheduleData = parsed;
+          createSchedule();
+        }
+
+      } catch (error) {
+        console.error("AzuraCast schedule error:", error);
+        createSchedule();
+      }
+
+    }
+
+
+    /* =========================================================
+       NOW MARKER
+       ========================================================= */
+
+    function updateNowMarker() {
+
+      const marker =
+        document.getElementById(
+          "nowMarker"
+        );
+
+
+      const now =
+        new Date();
+
+
+      const hour =
+        now.getHours();
+
+
+      const minutes =
+        now.getMinutes();
+
+
+      const position =
+        (
+          (
+            hour +
+            minutes / 60
+          ) / 24
+        ) * 100;
+
+
+      marker.style.left =
+        `${position}%`;
+
+    }
+
+
+    setInterval(
+      updateNowMarker,
+      1000
+    );
+
+    setInterval(
+      updateScheduleSpotlight,
+      60000
+    );
+
+
+    /* =========================================================
+       RECENTLY PLAYED
+       ========================================================= */
+
+    function renderRecentTracks(
+      history
+    ) {
+
+      const list =
+        document.getElementById(
+          "recentList"
+        );
+
+
+      const recentTracks =
+        history
+          .slice(0, 12)
+          .map(track => {
+            const playedAt =
+              new Date(
+                track.played_at ||
+                track.timestamp * 1000
+              );
+
+            return [
+              Number.isNaN(playedAt.getTime())
+                ? "--:--"
+                : playedAt.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                  }),
+              track.song?.text ||
+              [track.song?.artist, track.song?.title]
+                .filter(Boolean)
+                .join(" — ") ||
+              "Unknown track"
+            ];
+          });
+
+
+      list.innerHTML =
+        recentTracks
+          .map(
+            ([time, title]) => `
+
+              <div class="recent-row">
+
+                <span class="recent-time">
+                  ${time}
+                </span>
+
+                <span class="recent-track">
+                  ${title}
+                </span>
+
+              </div>
+
+            `
+          )
+          .join("");
+
+    }
+
+
+    /* =========================================================
+       ABOUT ACCORDIONS
+       ========================================================= */
+
+    document
+      .querySelectorAll(
+        ".about-toggle"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              const section =
+                button.closest(
+                  ".about-section"
+                );
+
+
+              const isOpen =
+                section.classList.contains(
+                  "open"
+                );
+
+
+              document
+                .querySelectorAll(
+                  ".about-section"
+                )
+                .forEach(
+                  other => {
+
+                    other.classList.remove(
+                      "open"
+                    );
+
+
+                    const marker =
+                      other.querySelector(
+                        ".about-marker"
+                      );
+
+
+                    if (
+                      marker
+                    ) {
+
+                      marker.textContent =
+                        "+";
+
+                    }
+
+                  }
+                );
+
+
+              if (
+                !isOpen
+              ) {
+
+                section.classList.add(
+                  "open"
+                );
+
+
+                const marker =
+                  section.querySelector(
+                    ".about-marker"
+                  );
+
+
+                if (
+                  marker
+                ) {
+
+                  marker.textContent =
+                    "−";
+
+                }
+
+              }
+
+            }
+          );
+
+        }
+      );
+
+
+    /* =========================================================
+       COLOR SKINS
+       ========================================================= */
+
+    const skinConfig = {
+      classic: {
+        color: "#f8ca07",
+        logo: "images/MBV_YELLOWc.png"
+      },
+      blue: {
+        color: "#1865ba",
+        logo: "images/MBV_BLUE.png"
+      },
+      red: {
+        color: "#e22b24",
+        logo: "images/MBV_RED.png"
+      }
+    };
+
+
+    function applySkin(
+      skinName
+    ) {
+
+      const skin =
+        skinConfig[skinName] ||
+        skinConfig.classic;
+
+      document.documentElement.style.setProperty(
+        "--yellow",
+        skin.color
+      );
+
+      brandLogo.src =
+        skin.logo;
+
+      skinButtons.forEach(
+        button => {
+          button.setAttribute(
+            "aria-pressed",
+            button.dataset.skin === skinName
+          );
+        }
+      );
+
+      localStorage.setItem(
+        "mbv-skin",
+        skinName
+      );
+
+    }
+
+
+    skinButtons.forEach(
+      button => {
+        button.addEventListener(
+          "click",
+          () => applySkin(button.dataset.skin)
+        );
+      }
+    );
+
+
+    function initializeSkin() {
+
+      applySkin(
+        localStorage.getItem("mbv-skin") ||
+        "classic"
+      );
+
+    }
+
+
+    /* =========================================================
+       AUDIO CONFIGURATION
+       ========================================================= */
+
+    function configureAudio() {
+
+      if (
+        CONFIG.streamUrl
+      ) {
+
+        audio.src =
+          CONFIG.streamUrl;
+
+        audio.load();
+
+      }
+
+
+      audio.volume =
+        volume;
+
+
+      volumeSlider.value =
+        Math.round(
+          volume * 100
+        );
+
+
+      setVolumeIcon();
+
+    }
+
+
+    /* =========================================================
+       INITIALIZATION
+       ========================================================= */
+
+    function init() {
+
+      initializeSkin();
+
+      showIcon.innerHTML =
+        getConnectionIcon("loading");
+
+      createSchedule();
+
+      renderRecentTracks([]);
+
+      updateNowMarker();
+
+      configureAudio();
+
+      setPlayerState(
+        "ready"
+      );
+
+      startNowPlayingPolling();
+
+      fetchSchedule();
+
+      updateMiniPlayer();
+
+    }
+
+
+    init();
+
+  </script>
+
+</body>
+</html>
