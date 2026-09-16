@@ -85,7 +85,15 @@
 
       margin: 0 auto;
 
-      padding-top: 42px;
+      padding-top: clamp(16px, 2.5vw, 32px);
+      view-transition-name: site-shell;
+    }
+
+    ::view-transition-group(site-shell),
+    ::view-transition-old(site-shell),
+    ::view-transition-new(site-shell) {
+      animation-duration: 280ms;
+      animation-timing-function: var(--ease);
     }
 
     .brand {
@@ -97,6 +105,16 @@
       user-select: none;
     }
 
+    .brand-tagline {
+      margin-top: 6px;
+      color: var(--muted);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
     /* =========================================================
        NAV
        ========================================================= */
@@ -105,8 +123,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 28px;
-      margin-top: 40px;
+      gap: clamp(18px, 2.5vw, 34px);
+      margin-top: clamp(16px, 2vw, 28px);
     }
 
     .nav-button {
@@ -146,6 +164,37 @@
 
     .view.active {
       display: block;
+      animation: view-enter 260ms var(--ease) both;
+    }
+
+    @keyframes view-enter {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .app.listen-layout {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .app.listen-layout main {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+
+    .app.listen-layout #liveView.active {
+      min-height: 0;
+      padding-top: 0;
     }
 
 
@@ -154,18 +203,15 @@
        ========================================================= */
 
     .player {
-      width: min(
-        calc(100% - 40px),
-        700px
-      );
+      width: min(calc(100% - 40px), 820px);
 
       display: flex;
       flex-direction: column;
 
       margin: 0 auto;
 
-      padding-top: 52px;
-      padding-bottom: 56px;
+      padding-top: clamp(14px, 2.5vw, 28px);
+      padding-bottom: 0;
     }
 
     .live-orientation {
@@ -173,10 +219,48 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
 
-      width: min(calc(100% - 40px), 700px);
-      margin: 30px auto 0;
+      width: min(calc(100% - 40px), 820px);
+      margin: 0 auto;
 
       text-align: center;
+      max-height: 90px;
+      opacity: 1;
+      overflow: hidden;
+      transition: max-height 220ms var(--ease), opacity 220ms ease;
+    }
+
+    #liveView.player-paused .live-orientation {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #liveView.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: calc(100svh - clamp(158px, 13vw, 185px));
+      padding-top: clamp(12px, 1.2vw, 16px);
+    }
+
+    #liveView.active .player {
+      order: 1;
+    }
+
+    #liveView.active .live-orientation {
+      order: 2;
+    }
+
+    .listen-note {
+      order: 3;
+      width: min(calc(100% - 40px), 820px);
+      margin: clamp(18px, 3vw, 32px) auto 0;
+      color: var(--muted-2);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: clamp(9px, .8vw, 11px);
+      letter-spacing: .12em;
+      text-align: center;
+      text-transform: uppercase;
     }
 
     .live-orientation-item {
@@ -269,41 +353,16 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 22px;
+      gap: clamp(12px, 1.8vw, 22px);
       order: 1;
       text-align: center;
-      max-width: 590px;
+      max-width: 700px;
       margin: 0 auto;
     }
 
-    .show-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-
-      padding: 7px 12px;
-
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--surface);
-
-      color: var(--white);
-
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .show-pill-icon,
     .daypart-icon {
       display: inline-flex;
       flex-shrink: 0;
-    }
-
-    .show-pill-icon svg {
-      width: 16px;
-      height: 16px;
     }
 
     .daypart-icon svg {
@@ -311,7 +370,6 @@
       height: 15px;
     }
 
-    .show-pill-icon svg,
     .daypart-icon svg {
       fill: none;
       stroke: currentColor;
@@ -321,12 +379,58 @@
     }
 
     .artwork-wrap {
-      width: 210px;
-      height: 210px;
+      width: min(clamp(160px, 24vw, 280px), 30svh);
+      height: min(clamp(160px, 24vw, 280px), 30svh);
 
       position: relative;
 
       flex-shrink: 0;
+    }
+
+    .artwork-play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(18, 18, 18, .55);
+      color: var(--white);
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      transition: opacity 250ms ease, color 140ms ease, background 140ms ease;
+    }
+
+    .artwork-play:hover,
+    .artwork-play:focus-visible {
+      background: rgba(18, 18, 18, .8);
+      color: var(--yellow);
+      outline: none;
+    }
+
+    .artwork-play svg {
+      width: 30px;
+      height: 30px;
+      fill: currentColor;
+      stroke: currentColor;
+    }
+
+    .player.playing .artwork-play,
+    .player.muted .artwork-play {
+      opacity: .14;
+    }
+
+    .player.playing .artwork-play:hover,
+    .player.playing .artwork-play:focus-visible,
+    .player.muted .artwork-play:hover,
+    .player.muted .artwork-play:focus-visible {
+      opacity: 1;
     }
 
     .artwork {
@@ -362,6 +466,50 @@
       opacity: 1;
 
       animation-play-state: paused;
+    }
+
+    .player.paused:not(.requesting) .metadata,
+    .player.paused:not(.requesting) .controls {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .metadata {
+      max-height: 60px;
+      overflow: hidden;
+      transition: max-height 220ms var(--ease), opacity 220ms ease;
+    }
+
+    .controls {
+      max-height: 48px;
+      overflow: hidden;
+      transition: max-height 220ms var(--ease), opacity 220ms ease;
+    }
+
+    .osd {
+      height: 0;
+      min-height: 0;
+      margin-top: 0;
+      overflow: hidden;
+    }
+
+    .osd.visible {
+      height: auto;
+      min-height: 22px;
+      margin-top: 20px;
+    }
+
+    .player.paused:not(.requesting) .player-core {
+      gap: 0;
+    }
+
+    .player.paused:not(.requesting) .metadata,
+    .player.paused:not(.requesting) .controls {
+      max-height: 0;
+    }
+
+    .player.paused:not(.requesting) .controls {
+      min-height: 0;
     }
 
     .player.buffering .artwork,
@@ -411,7 +559,7 @@
 
       color: var(--muted);
 
-      font-size: 17px;
+      font-size: clamp(15px, 1.45vw, 21px);
       line-height: 1.35;
 
       white-space: nowrap;
@@ -427,6 +575,37 @@
       display: none;
     }
 
+    .track-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .spotify-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      color: var(--muted);
+      transition: color 140ms ease;
+    }
+
+    .spotify-link:hover,
+    .spotify-link:focus-visible {
+      color: var(--yellow);
+      outline: none;
+    }
+
+    .spotify-link svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-width: 1.7;
+    }
+
 
     /* =========================================================
        SIGNAL BUZZ THING
@@ -437,8 +616,8 @@
 
       inset: -14px;
 
-      width: auto;
-      height: auto;
+      width: calc(100% + 28px);
+      height: calc(100% + 28px);
 
       border-radius: 50%;
 
@@ -464,7 +643,7 @@
       align-items: center;
       justify-content: center;
 
-      gap: 18px;
+      gap: 10px;
 
       min-height: 32px;
     }
@@ -478,8 +657,8 @@
       align-items: center;
       justify-content: center;
 
-      width: 30px;
-      height: 30px;
+      width: 48px;
+      height: 48px;
 
       padding: 0;
 
@@ -501,8 +680,8 @@
     }
 
     .control svg {
-      width: 20px;
-      height: 20px;
+      width: 27px;
+      height: 27px;
 
       fill: currentColor;
       stroke: currentColor;
@@ -526,7 +705,7 @@
     .volume-control {
       width: auto;
 
-      min-width: 30px;
+      min-width: 48px;
 
       justify-content: flex-start;
     }
@@ -545,7 +724,7 @@
 
     .volume-control:hover .volume-slider-wrap,
     .volume-control:focus-within .volume-slider-wrap {
-      width: 174px;
+      width: 144px;
 
       margin-left: 5px;
     }
@@ -567,9 +746,9 @@
     .signal-label {
       position: static;
 
-      width: 76px;
+      width: 38px;
 
-      margin-left: 10px;
+      margin-left: 6px;
 
       transform: none;
 
@@ -645,9 +824,11 @@
        ========================================================= */
 
     .osd {
-      min-height: 22px;
+      height: 0;
+      min-height: 0;
 
-      margin-top: 20px;
+      margin-top: 0;
+      overflow: hidden;
 
       text-align: center;
 
@@ -670,6 +851,9 @@
     }
 
     .osd.visible {
+      height: auto;
+      min-height: 22px;
+      margin-top: 20px;
       opacity: 1;
     }
 
@@ -681,34 +865,29 @@
     .request-view {
       width: min(
         calc(100% - 40px),
-        480px
+        420px
       );
 
       margin: 0 auto;
 
-      padding-top: 20px;
-      padding-bottom: 40px;
+      padding: 18px;
+      background: var(--surface);
     }
 
     .request-view h2 {
       margin: 0;
-
-      padding-bottom: 10px;
-
-      border-bottom: 1px solid var(--line);
-
-      font-size: 28px;
-      font-weight: 500;
-
-      letter-spacing: -.03em;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: .02em;
+      text-transform: uppercase;
     }
 
     .request-view p {
-      margin: 12px 0 24px;
+      margin: 5px 0 18px;
 
       color: var(--muted);
 
-      font-size: 14px;
+      font-size: 12px;
     }
 
     .field {
@@ -716,13 +895,7 @@
     }
 
     .request-view .field {
-      display: grid;
-      grid-template-columns: 84px minmax(0, 1fr);
-      align-items: baseline;
-      gap: 16px;
-      padding: 11px 0;
-      margin-bottom: 0;
-      border-bottom: 1px solid var(--line);
+      margin-bottom: 12px;
     }
 
     .field label {
@@ -740,7 +913,7 @@
     }
 
     .request-view .field label {
-      margin: 0;
+      margin-bottom: 5px;
     }
 
     .field input,
@@ -765,8 +938,9 @@
 
     .request-view .field input,
     .request-view .field textarea {
-      padding: 0;
-      border-bottom: 0;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
     }
 
     .field input:focus,
@@ -778,12 +952,10 @@
       display: flex;
       align-items: center;
 
-      gap: 20px;
+      gap: 16px;
 
-      margin-top: 24px;
-      padding-top: 14px;
-
-      border-top: 1px solid var(--line);
+      margin-top: 16px;
+      padding-top: 0;
     }
 
     .request-button {
@@ -821,14 +993,14 @@
        ========================================================= */
 
     .schedule-view {
-      padding-top: 64px;
+      padding-top: 40px;
       padding-bottom: 160px;
     }
 
     .schedule-container {
       width: min(
         calc(100% - 40px),
-        var(--content-width)
+        820px
       );
 
       margin: 0 auto;
@@ -848,16 +1020,15 @@
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 1px;
 
-      margin-bottom: 34px;
+      margin-bottom: 14px;
 
-      border: 1px solid var(--line);
-      background: var(--line);
+      background: var(--surface);
     }
 
     .schedule-status {
       min-width: 0;
 
-      padding: 18px 20px;
+      padding: 9px 14px;
 
       background: var(--surface);
     }
@@ -869,7 +1040,7 @@
     .schedule-status-label {
       display: block;
 
-      margin-bottom: 8px;
+      margin-bottom: 3px;
 
       color: var(--muted-2);
 
@@ -890,7 +1061,7 @@
 
       color: var(--white);
 
-      font-size: 19px;
+      font-size: 16px;
       font-weight: 600;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -899,14 +1070,14 @@
     .schedule-status-icon {
       display: inline-flex;
 
-      margin-bottom: 7px;
+      margin-bottom: 2px;
 
       color: var(--yellow);
     }
 
     .schedule-status-icon svg {
-      width: 18px;
-      height: 18px;
+      width: 15px;
+      height: 15px;
 
       fill: none;
       stroke: currentColor;
@@ -932,11 +1103,11 @@
     }
 
     .schedule-status-description {
-      margin: 10px 0 0;
+      margin: 4px 0 0;
 
       color: var(--muted);
 
-      font-size: 12px;
+      font-size: 11px;
       line-height: 1.45;
     }
 
@@ -1176,7 +1347,35 @@
        ========================================================= */
 
     .recently-played {
-      margin-top: 72px;
+      margin-top: 28px;
+    }
+
+    .recently-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 44px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-bottom: 0;
+      background: transparent;
+      color: var(--white);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .recently-toggle::after {
+      content: "+";
+      color: var(--yellow);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1;
+    }
+
+    .recently-played.open .recently-toggle::after {
+      content: "−";
     }
 
     .subheading {
@@ -1192,7 +1391,16 @@
     }
 
     .recent-list {
-      border-top: 1px solid var(--line);
+      max-height: 0;
+      overflow: hidden;
+      border-top: 0;
+      opacity: 0;
+      transition: max-height 220ms var(--ease), opacity 180ms ease;
+    }
+
+    .recently-played.open .recent-list {
+      max-height: 1200px;
+      opacity: 1;
     }
 
     .recent-row {
@@ -1206,7 +1414,7 @@
 
       padding: 14px 0;
 
-      border-bottom: 1px solid var(--line);
+      border-bottom: 0;
     }
 
     .recent-time {
@@ -1226,6 +1434,32 @@
       font-size: 14px;
     }
 
+    .recent-save {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin-left: 8px;
+      color: var(--muted-2);
+      vertical-align: middle;
+    }
+
+    .recent-save:hover,
+    .recent-save:focus-visible {
+      color: var(--yellow);
+      outline: none;
+    }
+
+    .recent-save svg {
+      width: 15px;
+      height: 15px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-width: 1.7;
+    }
+
 
     /* =========================================================
        ABOUT
@@ -1239,7 +1473,7 @@
     .about-container {
       width: min(
         calc(100% - 40px),
-        var(--about-width)
+        820px
       );
 
       margin: 0 auto;
@@ -1255,14 +1489,6 @@
       .about-container > .about-section {
         min-width: 0;
       }
-    }
-
-    .about-section {
-      border-top: 1px solid var(--line);
-    }
-
-    .about-section:last-child {
-      border-bottom: 1px solid var(--line);
     }
 
     .about-content {
@@ -1387,8 +1613,6 @@
 
     .sticker-card {
       padding: 24px 0 4px;
-
-      border-top: 1px solid var(--line);
     }
 
     .sticker-card strong {
@@ -1426,7 +1650,7 @@
       width: 72px;
       height: 72px;
 
-      border: 1px solid var(--line);
+      border: 0;
       background: var(--surface);
     }
 
@@ -1692,25 +1916,20 @@
     @media (min-width: 701px) {
 
       .site-shell {
-        padding-top: 28px;
+        padding-top: clamp(16px, 2.5vw, 32px);
       }
 
       .primary-nav {
-        margin-top: 26px;
+        margin-top: clamp(16px, 2vw, 28px);
       }
 
       .live-orientation {
-        margin-top: 18px;
+        margin-top: 8px;
       }
 
       .player {
-        padding-top: 30px;
-        padding-bottom: 34px;
-      }
-
-      .artwork-wrap {
-        width: 190px;
-        height: 190px;
+        padding-top: clamp(14px, 2.5vw, 28px);
+        padding-bottom: 0;
       }
 
     }
@@ -1722,10 +1941,14 @@
 
     @media (max-width: 700px) {
 
+      #liveView.active {
+        padding-top: 26px;
+      }
+
       .site-shell {
         width: calc(100% - 32px);
 
-        padding-top: 28px;
+        padding-top: 16px;
       }
 
       .brand {
@@ -1735,7 +1958,7 @@
       .primary-nav {
         gap: 22px;
 
-        margin-top: 32px;
+        margin-top: 16px;
       }
 
       .nav-button {
@@ -1745,8 +1968,8 @@
       .player {
         width: calc(100% - 32px);
 
-        padding-top: 42px;
-        padding-bottom: 44px;
+        padding-top: 14px;
+        padding-bottom: 0;
       }
 
       .live-orientation {
@@ -1755,12 +1978,17 @@
       }
 
       .player-core {
-        gap: 22px;
+        gap: 12px;
       }
 
       .artwork-wrap {
-        width: 180px;
-        height: 180px;
+        width: min(180px, 30svh);
+        height: min(180px, 30svh);
+      }
+
+      .artwork-play {
+        width: 64px;
+        height: 64px;
       }
 
       .metadata {
@@ -1790,11 +2018,79 @@
       }
 
       .schedule-spotlight {
-        grid-template-columns: 1fr;
+        display: none;
       }
 
-      .schedule-status.next {
-        border-top: 1px solid var(--line);
+      .timeline-scroll {
+        overflow: visible;
+      }
+
+      .timeline {
+        padding-bottom: 0;
+      }
+
+      .timeline-hours,
+      .now-marker {
+        display: none;
+      }
+
+      .dayparts {
+        display: grid;
+        gap: 0;
+        min-height: 0;
+        border-top: 0;
+      }
+
+      .daypart,
+      .daypart.open {
+        position: static;
+        min-width: 0;
+        width: auto !important;
+        min-height: 96px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        column-gap: 16px;
+        align-content: center;
+        padding: 14px 0;
+        border-top: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        overflow: hidden;
+      }
+
+      .daypart-name {
+        font-size: 15px;
+      }
+
+      .daypart-time {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: center;
+        margin-top: 0;
+        font-size: 11px;
+      }
+
+      .daypart.open {
+        background: var(--surface);
+        box-shadow: none;
+        padding-left: 14px;
+      }
+
+      .daypart.active,
+      .daypart.open.active {
+        box-shadow: inset 0 -2px 0 var(--yellow);
+      }
+
+      .daypart-detail {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        padding-right: 0;
+      }
+
+      .daypart.open .daypart-detail {
+        padding-top: 12px;
       }
 
       .recent-row {
@@ -1846,25 +2142,19 @@
 
     @media (hover: none), (pointer: coarse) {
 
-      .control,
-      .play-control {
-        width: 44px;
-        height: 44px;
+      .control {
+        width: 48px;
+        height: 48px;
       }
 
       .control svg {
-        width: 22px;
-        height: 22px;
-      }
-
-      .play-control svg {
         width: 27px;
         height: 27px;
       }
 
       .volume-control {
-        width: 44px;
-        min-width: 44px;
+        width: 48px;
+        min-width: 48px;
       }
 
       .volume-slider-wrap {
@@ -1918,9 +2208,13 @@
       <img
         id="brandLogo"
         class="brand"
-        src="MBV_YELLOWc.png"
+        src="images/MBV_YELLOWc.png"
         alt="MBV"
       >
+
+      <div class="brand-tagline">
+        24/7 Drum &amp; Bass Radio
+      </div>
 
 
       <nav
@@ -2061,22 +2355,21 @@
 
               </div>
 
-            </div>
-
-            <div
-              class="show-pill"
-              aria-live="polite"
-            >
-
-              <span
-                id="showIcon"
-                class="show-pill-icon"
-                aria-hidden="true"
-              ></span>
-
-              <span id="showName">
-                CONNECTING
-              </span>
+              <button
+                id="playButton"
+                class="artwork-play"
+                type="button"
+                aria-label="Play"
+                title="Play"
+              >
+                <svg
+                  id="playIcon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M8 5 L19 12 L8 19 Z"></path>
+                </svg>
+              </button>
 
             </div>
 
@@ -2105,6 +2398,26 @@
 
               </div>
 
+              <div class="track-actions">
+                <a
+                  id="currentSpotify"
+                  class="spotify-link"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Find current track on Spotify"
+                  title="Find on Spotify"
+                  hidden
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M7.5 9.2c3.2-1 6.8-.8 9.6.4"></path>
+                    <path d="M8.2 12.3c2.5-.7 5.3-.5 7.6.5"></path>
+                    <path d="M9 15.1c1.8-.4 3.7-.3 5.4.4"></path>
+                  </svg>
+                </a>
+              </div>
+
             </div>
 
           </div>
@@ -2118,29 +2431,6 @@
             id="controls"
             class="controls"
           >
-
-
-            <!-- PLAY / PAUSE -->
-
-            <button
-              id="playButton"
-              class="control play-control"
-              type="button"
-              aria-label="Play"
-              title="Play"
-            >
-
-              <svg
-                id="playIcon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  d="M8 5 L19 12 L8 19 Z"
-                ></path>
-              </svg>
-
-            </button>
 
 
             <!-- VOLUME -->
@@ -2196,7 +2486,7 @@
                   type="range"
                   min="0"
                   max="100"
-                  value="84"
+                  value="85"
                   aria-label="Volume"
                 >
 
@@ -2330,6 +2620,10 @@
 
         </div>
 
+        <p class="listen-note">
+          2024 - 2026 © Massive Brain Volume Radio
+        </p>
+
       </section>
 
 
@@ -2450,11 +2744,17 @@
           </div>
 
 
-          <section class="recently-played">
+          <section class="recently-played open">
 
-            <h2 class="subheading">
+            <button
+              id="recentToggle"
+              class="recently-toggle subheading"
+              type="button"
+              aria-expanded="true"
+              aria-controls="recentList"
+            >
               RECENTLY PLAYED
-            </h2>
+            </button>
 
             <div
               id="recentList"
@@ -2482,7 +2782,7 @@
 
           <!-- STICKER SHOP -->
 
-          <section class="about-section open always-open">
+          <section class="about-section manual-section open always-open">
 
             <div class="manual-kicker">
               THANKS FOR YOUR SUPPORT!
@@ -2742,7 +3042,7 @@
               type="range"
               min="0"
               max="100"
-              value="84"
+              value="85"
               aria-label="Mini-player volume"
             >
 
@@ -2824,17 +3124,17 @@
     const player =
       document.getElementById("player");
 
+    const app =
+      document.querySelector(".app");
+
+    const liveView =
+      document.getElementById("liveView");
+
     const audio =
       document.getElementById("audio");
 
     const artwork =
       document.getElementById("artwork");
-
-    const showName =
-      document.getElementById("showName");
-
-    const showIcon =
-      document.getElementById("showIcon");
 
     const brandLogo =
       document.getElementById("brandLogo");
@@ -2849,6 +3149,9 @@
 
     const trackTitle =
       document.getElementById("trackTitle");
+
+    const currentSpotify =
+      document.getElementById("currentSpotify");
 
     const playButton =
       document.getElementById("playButton");
@@ -2954,6 +3257,12 @@
 
     const miniRequest =
       document.getElementById("miniRequest");
+
+    const recentToggle =
+      document.getElementById("recentToggle");
+
+    const recentlyPlayed =
+      document.querySelector(".recently-played");
 
 
     /* =========================================================
@@ -3069,6 +3378,11 @@
 
       player.classList.add(
         nextState
+      );
+
+      liveView.classList.toggle(
+        "player-paused",
+        nextState === "paused"
       );
 
 
@@ -3305,6 +3619,13 @@
           : "Mute"
       );
 
+      muteButton.setAttribute(
+        "aria-label",
+        isMuted
+          ? "Unmute"
+          : "Mute"
+      );
+
     }
 
 
@@ -3348,120 +3669,12 @@
         Artist/title NEVER enters this label.
       */
 
-      switch (
-        playerState
-      ) {
-
-        case "loading":
-
-          signalLabel.textContent =
-            "CONNECTING";
-
-          break;
-
-
-        case "ready":
-
-          signalLabel.textContent =
-            "READY";
-
-          break;
-
-
-        case "playing":
-
-          signalLabel.textContent =
-            "PLAYING";
-
-          break;
-
-
-        case "muted":
-
-          signalLabel.textContent =
-            "MUTED";
-
-          break;
-
-
-        case "paused":
-
-          signalLabel.textContent =
-            "PAUSED";
-
-          break;
-
-
-        case "buffering":
-
-          signalLabel.textContent =
-            "BUFFERING";
-
-          break;
-
-
-        case "reconnecting":
-
-          signalLabel.textContent =
-            "RECONNECTING…";
-
-          break;
-
-
-        case "offline":
-
-          signalLabel.textContent =
-            "STATION OFFLINE";
-
-          break;
-
-
-        default:
-
-          signalLabel.textContent =
-            "READY";
-      }
+      signalLabel.textContent =
+        `${Math.round(volume * 100)}%`;
 
       signalStateIcon.innerHTML =
         getConnectionIcon(
           playerState
-        );
-
-    }
-
-
-    /* =========================================================
-       OSD
-       ========================================================= */
-
-    function showOSD(
-      message
-    ) {
-
-      clearTimeout(
-        osdTimer
-      );
-
-
-      osd.textContent =
-        message;
-
-
-      osd.classList.add(
-        "visible"
-      );
-
-
-      osdTimer =
-        setTimeout(
-          () => {
-
-            osd.classList.remove(
-              "visible"
-            );
-
-          },
-          1100
         );
 
     }
@@ -3789,10 +4002,6 @@
           );
 
 
-          showOSD(
-            "PLAY"
-          );
-
         } catch (error) {
 
           console.error(
@@ -3806,10 +4015,6 @@
           );
 
 
-          showOSD(
-            "PRESS PLAY TO CONNECT"
-          );
-
         }
 
       } else {
@@ -3821,10 +4026,6 @@
           "paused"
         );
 
-
-        showOSD(
-          "PAUSED"
-        );
 
       }
 
@@ -3860,10 +4061,6 @@
         );
 
 
-        showOSD(
-          "MUTED"
-        );
-
       } else {
 
         setPlayerState(
@@ -3872,10 +4069,6 @@
             : "paused"
         );
 
-
-        showOSD(
-          `VOLUME ${Math.round(volume * 100)}%`
-        );
 
       }
 
@@ -3948,6 +4141,20 @@
 
       }
 
+      if (
+        volume === 0 &&
+        !isMuted
+      ) {
+        isMuted = true;
+        audio.muted = true;
+
+        setPlayerState(
+          audio.paused
+            ? "paused"
+            : "muted"
+        );
+      }
+
 
       volumeSlider.value =
         Math.round(
@@ -3959,13 +4166,12 @@
           volume * 100
         );
 
+      signalLabel.textContent =
+        `${Math.round(volume * 100)}%`;
+
 
       setVolumeIcon();
 
-
-      showOSD(
-        `VOLUME ${Math.round(volume * 100)}%`
-      );
 
     }
 
@@ -4124,12 +4330,55 @@
       }
     );
 
+    let touchStartX = null;
+
+    document.addEventListener(
+      "touchstart",
+      event => {
+        if (
+          event.touches.length === 1
+        ) {
+          touchStartX = event.touches[0].clientX;
+        }
+      },
+      { passive: true }
+    );
+
+    document.addEventListener(
+      "touchend",
+      event => {
+        if (
+          touchStartX === null ||
+          requestOpen
+        ) {
+          touchStartX = null;
+          return;
+        }
+
+        const distance =
+          event.changedTouches[0].clientX - touchStartX;
+
+        touchStartX = null;
+
+        if (
+          Math.abs(distance) >= 60
+        ) {
+          navigateRelative(
+            distance < 0
+              ? 1
+              : -1
+          );
+        }
+      },
+      { passive: true }
+    );
+
 
     /* =========================================================
        NAVIGATION
        ========================================================= */
 
-    function navigateTo(
+    function applyNavigation(
       viewName
     ) {
 
@@ -4142,6 +4391,11 @@
 
       currentView =
         viewName;
+
+      app.classList.toggle(
+        "listen-layout",
+        viewName === "live"
+      );
 
 
       Object.entries(
@@ -4198,6 +4452,24 @@
 
     }
 
+    function navigateTo(
+      viewName
+    ) {
+      if (
+        document.startViewTransition
+      ) {
+        document.startViewTransition(
+          () => applyNavigation(viewName)
+        );
+
+        return;
+      }
+
+      applyNavigation(
+        viewName
+      );
+    }
+
 
     navButtons.forEach(
       button => {
@@ -4213,6 +4485,19 @@
           }
         );
 
+      }
+    );
+
+    recentToggle.addEventListener(
+      "click",
+      () => {
+        const isOpen =
+          recentlyPlayed.classList.toggle("open");
+
+        recentToggle.setAttribute(
+          "aria-expanded",
+          String(isOpen)
+        );
       }
     );
 
@@ -4508,34 +4793,13 @@
       .addEventListener(
         "click",
         () => {
-
-          const button =
-            document.getElementById(
-              "sendRequest"
-            );
-
-
           /*
             Connect the actual AzuraCast request endpoint
             here when request submission is configured.
           */
 
-          button.textContent =
-            "REQUEST SENT";
-
-
-          showOSD(
-            "REQUEST SENT"
-          );
-
-
           setTimeout(
             () => {
-
-              button.textContent =
-                "SEND";
-
-
               document
                 .getElementById(
                   "requestName"
@@ -4761,16 +5025,6 @@
         "—";
 
 
-      showName.textContent =
-        currentTrack.show;
-
-      showIcon.innerHTML =
-        getShowIcon(
-          currentTrack.show,
-          new Date().getHours()
-        );
-
-
       miniShow.textContent =
         currentTrack.show;
 
@@ -4803,11 +5057,20 @@
         currentTrack.title
       ) {
 
-        showOSD(
-          `${currentTrack.artist} — ${currentTrack.title}`
-        );
-
       }
+
+      const spotifyQuery =
+        [currentTrack.artist, currentTrack.title]
+          .filter(Boolean)
+          .join(" ");
+
+      currentSpotify.hidden =
+        !spotifyQuery;
+
+      currentSpotify.href =
+        spotifyQuery
+          ? `https://open.spotify.com/search/${encodeURIComponent(spotifyQuery)}`
+          : "#";
 
 
       updateMiniPlayer();
@@ -5672,6 +5935,56 @@
        RECENTLY PLAYED
        ========================================================= */
 
+    function formatAzuraCastTimestamp(
+      value
+    ) {
+      if (
+        value === null ||
+        value === undefined ||
+        value === ""
+      ) {
+        return null;
+      }
+
+      const numericValue =
+        Number(value);
+
+      const date =
+        Number.isFinite(numericValue)
+          ? new Date(
+              numericValue < 100000000000
+                ? numericValue * 1000
+                : numericValue
+            )
+          : new Date(value);
+
+      return Number.isNaN(date.getTime())
+        ? null
+        : date;
+    }
+
+    function escapeHtml(
+      value
+    ) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function spotifyIconMarkup() {
+      return `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle>
+          <path d="M7.5 9.2c3.2-1 6.8-.8 9.6.4"></path>
+          <path d="M8.2 12.3c2.5-.7 5.3-.5 7.6.5"></path>
+          <path d="M9 15.1c1.8-.4 3.7-.3 5.4.4"></path>
+        </svg>
+      `;
+    }
+
     function renderRecentTracks(
       history
     ) {
@@ -5687,23 +6000,37 @@
           .slice(0, 12)
           .map(track => {
             const playedAt =
-              new Date(
-                track.played_at ||
-                track.timestamp * 1000
+              formatAzuraCastTimestamp(
+                track.played_at ??
+                track.timestamp
               );
 
+            const artistName =
+              track.song?.artist ||
+              "";
+
+            const titleName =
+              track.song?.title ||
+              "";
+
+            const spotifyQuery =
+              [artistName, titleName]
+                .filter(Boolean)
+                .join(" ");
+
             return [
-              Number.isNaN(playedAt.getTime())
+              !playedAt
                 ? "--:--"
                 : playedAt.toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit"
                   }),
               track.song?.text ||
-              [track.song?.artist, track.song?.title]
+              [artistName, titleName]
                 .filter(Boolean)
                 .join(" — ") ||
-              "Unknown track"
+              "Unknown track",
+              spotifyQuery
             ];
           });
 
@@ -5711,7 +6038,7 @@
       list.innerHTML =
         recentTracks
           .map(
-            ([time, title]) => `
+            ([time, title, spotifyQuery]) => `
 
               <div class="recent-row">
 
@@ -5720,7 +6047,10 @@
                 </span>
 
                 <span class="recent-track">
-                  ${title}
+                  ${escapeHtml(title)}
+                  ${spotifyQuery
+                    ? `<a class="recent-save" href="https://open.spotify.com/search/${encodeURIComponent(spotifyQuery)}" target="_blank" rel="noopener noreferrer" aria-label="Find ${escapeHtml(title)} on Spotify" title="Find on Spotify">${spotifyIconMarkup()}</a>`
+                    : ""}
                 </span>
 
               </div>
@@ -5830,15 +6160,15 @@
     const skinConfig = {
       classic: {
         color: "#f8ca07",
-        logo: "MBV_YELLOWc.png"
+        logo: "images/MBV_YELLOWc.png"
       },
       blue: {
         color: "#1865ba",
-        logo: "MBV_BLUE.png"
+        logo: "images/MBV_BLUE.png"
       },
       red: {
         color: "#e22b24",
-        logo: "MBV_RED.png"
+        logo: "images/MBV_RED.png"
       }
     };
 
@@ -5937,8 +6267,9 @@
 
       initializeSkin();
 
-      showIcon.innerHTML =
-        getConnectionIcon("loading");
+      app.classList.add(
+        "listen-layout"
+      );
 
       createSchedule();
 
@@ -5949,7 +6280,7 @@
       configureAudio();
 
       setPlayerState(
-        "ready"
+        "paused"
       );
 
       startNowPlayingPolling();
