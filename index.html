@@ -11,9 +11,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="MBV Radio">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="mbv-icon-512.png" type="image/svg+xml">
   <link rel="apple-touch-icon" href="mbv-icon-192.png">
-  <title>24/7 Drum & Bass Radio | Massive Brain Volume</title>
+  <title>24/7 Drum & Bass Radio</title>
     <link rel="manifest" href="manifest.webmanifest">
   <style>
     :root {
@@ -24,8 +24,8 @@
       --muted-2: #a6a6a6;
       --line: #303030;
       --yellow: #f8ca07;
-      --blue: #65a9e8;
-      --red: #ff6b63;
+      --blue: #044CAC;
+      --red: #FB0D1D;
 
       --content-width: 1080px;
       --about-width: 640px;
@@ -254,13 +254,9 @@
     }
 
     .nav-button svg {
-      width: 34px;
-      height: 34px;
-      fill: none;
-      stroke: currentColor;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-width: 1.7;
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
     }
 
     .nav-button[data-view="about"] {
@@ -2609,8 +2605,8 @@
       }
 
       .nav-button svg {
-        width: 40px;
-        height: 40px;
+        width: 16px;
+        height: 16px;
       }
 
       .player {
@@ -2916,9 +2912,10 @@
           aria-label="Listen"
           title="Listen"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 14v-4a8 8 0 0 1 16 0v4"></path>
-            <path d="M4 14h3v5H5a1 1 0 0 1-1-1zM20 14h-3v5h2a1 1 0 0 0 1-1z"></path>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13s1.12-2 2.5-2S6 11.895 6 13m9-2c0 1.105-1.12 2-2.5 2S10 11.895 10 11s1.12-2 2.5-2S15 9.895 15 11"></path>
+            <path fill-rule="evenodd" d="M14 11V2h1v9zM6 3v10H5V3z"></path>
+            <path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4z"></path>
           </svg>
         </button>
 
@@ -2930,10 +2927,8 @@
           aria-label="Schedule"
           title="Schedule"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="16" rx="1"></rect>
-            <path d="M7 3v4M17 3v4M3 10h18"></path>
-            <path d="M7 14h.01M12 14h.01M17 14h.01M7 18h.01M12 18h.01"></path>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"></path>
           </svg>
         </button>
 
@@ -2945,10 +2940,8 @@
           aria-label="About"
           title="About"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17v3z"></path>
-            <path d="m14.5 7.5 3 3"></path>
-            <path d="M12 20h8"></path>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3q0-.405-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708M3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026z"></path>
           </svg>
         </button>
 
@@ -2999,7 +2992,7 @@
               id="liveCurrentMood"
               class="live-orientation-mood"
             >
-              24/7 autonomous radio
+              24/7 DnB
             </span>
           </div>
 
@@ -3326,7 +3319,7 @@
         </div>
 
         <p class="listen-note">
-          2024 - 2026 © Massive Brain Volume Radio
+          2024 - 2026 © Massive Brain Volume
         </p>
 
       </section>
@@ -3496,7 +3489,7 @@
           <section class="about-section manual-section sticker-section open always-open">
 
             <div class="manual-kicker">
-              THANKS FOR YOUR SUPPORT!
+              SUPPORT THE PROJECT
             </div>
 
             <div class="about-content">
@@ -3509,31 +3502,12 @@
                     >
                   </div>
                   <div class="sticker-details">
-                    <strong>CLASSIC YELLOW</strong>
-                    <span class="sticker-price">$3</span>
+                    <strong>STICKER PACK</strong>
+                    <span class="sticker-price">$12 / HUF3,800</span>
                   </div>
                   <a
                     class="sticker-order"
-                    href="mailto:mbv@mbvradio.com?subject=MBV%20Yellow%20Sticker"
-                  >
-                    BUY
-                  </a>
-                </article>
-
-                <article class="sticker-card">
-                  <div class="sticker-art">
-                    <img
-                      src="https://raw.githubusercontent.com/radiombv/mbvradio26/refs/heads/main/MBV_GREENc.png"
-                      alt="GREEN"
-                    >
-                  </div>
-                  <div class="sticker-details">
-                    <strong>GREEN</strong>
-                    <span class="sticker-price">$4.20</span>
-                  </div>
-                  <a
-                    class="sticker-order"
-                    href="mailto:mbv@mbvradio.com?subject=MBV%20Green%20Sticker"
+                    href="mailto:alright@mbvradio.com?subject=MBV%20Yellow%20Sticker"
                   >
                     BUY
                   </a>
@@ -3553,37 +3527,52 @@
             <div class="about-content">
 
               <p>
-                Launched in 2024, MBV [Massive Brain Volume] is a community-driven 24/7 drum & bass radio station.
-                A continuous, daypart oriented programming dedicated to the sounds of classic 90s and early 2000s.
-              </p>
+               <strong> Massive Brain Volume is a playlist-oriented non-stop drum & bass radio.</strong>
+               </p>
+               <p>
+                Built with the nostalgia of PlayStation 2 racing games, and the love of automotive gadgets,
+                MBV is my gift to the global community of contemporary and classic drum & bass fans.<br></p>
+                <p><strong>Thank You for Listening!</strong></p>
 
 
               <ul class="fact-list">
 
                 <li class="fact">
                   <span class="fact-label">
-                    EST.
+                    SINCE
                   </span>
                   <span class="fact-value">
-                    2024 | Pennsylvania, USA
+                    2024
+                  </span>
+                </li>
+
+                                <li class="fact">
+                  <span class="fact-label">
+                    CREATED BY
+                  </span>
+                  <span class="fact-value">
+                    växla
                   </span>
                 </li>
 
                 <li class="fact">
                   <span class="fact-label">
-                    SAY HELLO!
+                    SAY HELLO
                   </span>
                   <span class="fact-value">
-                    mbv@mbvradio.com
+                    alright@mbvradio.com
                   </span>
                 </li>
 
-                <li class="fact">
+                                <li class="fact">
                   <span class="fact-label">
-                    DEVELOPED BY
+                    THX
                   </span>
                   <span class="fact-value">
-                    REDRAS 
+                    Gromit <br>
+                    Josiah <br>
+                    Sol <br>
+                    Burg <br>
                   </span>
                 </li>
 
@@ -3616,7 +3605,7 @@
                   style="--skin-color: #f8ca07"
                   aria-pressed="true"
                 >
-                  CLASSIC
+                  YELLOW
                 </button>
 
                 <button
@@ -3664,7 +3653,7 @@
                 class="install-pwa-ios"
                 hidden
               >
-                <strong>IOS</strong>
+                <strong>iOS</strong>
                 <span>In Safari, tap Share, then choose Add to Home Screen.</span>
               </div>
 
@@ -3693,7 +3682,7 @@
                 <div class="motion-preference-row">
                   <div class="motion-preference-copy">
                     <strong>REDUCE MOTION</strong>
-                    <span>Limits animation and visual effects.</span>
+                    <span>Disables animation and visual effects.</span>
                   </div>
 
                   <div class="motion-controls">
@@ -6355,7 +6344,7 @@
           5,
 
         description:
-          "ATMOSPHERIC / DOWNTEMPO / JUNGLE CLASSICS",
+          "CLASSIC / ATMOSPHERIC",
 
         type:
           ""
@@ -6374,7 +6363,7 @@
           10,
 
         description:
-          "DEEP / LIQUID / SOULFUL",
+          "LIQUID / DEEP",
 
         type:
           ""
@@ -6410,7 +6399,7 @@
           20,
 
         description:
-          "ENERGETIC / DANCEFLOOR / DRIVING",
+          "DRIVING / ENERGETIC",
 
         type:
           ""
@@ -6428,7 +6417,7 @@
           24,
 
         description:
-          "DARK / HEAVY / NEURO",
+          "NEURO / EXPERIMENTAL",
 
         type:
           ""
@@ -7726,7 +7715,7 @@
             !isIos
           ) {
             showInstallState(
-              "Get the full app experience."
+              "Add MBV to your device."
             );
           }
         }
@@ -7741,7 +7730,7 @@
             !isIos
           ) {
             showInstallState(
-              "Get the full app experience."
+              "Add MBV to your device."
             );
           }
         }
@@ -7754,7 +7743,7 @@
             !deferredInstallPrompt
           ) {
             installPwaStatus.textContent =
-              "Use the browser menu to install MBV.";
+              "The MBV App is unavailable. Please try again later.";
             return;
           }
 
