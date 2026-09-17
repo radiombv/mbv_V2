@@ -8,6 +8,10 @@
   >
   <meta name="theme-color" content="#121212">
   <title>MBV | 24/7 Drum & Bass Radio</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <style>
     :root {
       --bg: #121212;
@@ -1848,6 +1852,246 @@
       margin-top: 18px;
     }
 
+    .install-pwa {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .install-pwa-copy {
+      min-width: 0;
+    }
+
+    .install-pwa-copy strong,
+    .install-pwa-copy span {
+      display: block;
+    }
+
+    .install-pwa-copy strong {
+      color: var(--white);
+      font-size: 14px;
+    }
+
+    .install-pwa-copy span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .install-pwa-button {
+      flex-shrink: 0;
+      appearance: none;
+      padding: 8px 10px;
+      border: 1px solid var(--yellow);
+      background: transparent;
+      color: var(--yellow);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .install-pwa-button:hover,
+    .install-pwa-button:focus-visible {
+      background: var(--yellow);
+      color: var(--bg);
+      outline: none;
+    }
+
+    .install-pwa-button[hidden],
+    .install-pwa[hidden] {
+      display: none;
+    }
+
+    .install-pwa.installed .install-pwa-copy span {
+      color: var(--yellow);
+    }
+
+    .install-pwa-ios {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-left: 2px solid var(--yellow);
+      background: color-mix(in srgb, var(--yellow) 7%, transparent);
+    }
+
+    .install-pwa-ios[hidden] {
+      display: none;
+    }
+
+    .install-pwa-ios strong,
+    .install-pwa-ios span {
+      display: block;
+    }
+
+    .install-pwa-ios strong {
+      color: var(--yellow);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .install-pwa-ios span {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .screensaver-preference {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .screensaver-preference-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .screensaver-preference-copy {
+      min-width: 0;
+    }
+
+    .screensaver-preference-copy strong,
+    .screensaver-preference-copy span {
+      display: block;
+    }
+
+    .screensaver-preference-copy strong {
+      color: var(--white);
+      font-size: 14px;
+    }
+
+    .screensaver-preference-copy span,
+    .screensaver-help {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .screensaver-preference-copy span {
+      margin-top: 3px;
+    }
+
+    .screensaver-controls {
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .screensaver-toggle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--yellow);
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .screensaver-toggle input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .screensaver-checkmark {
+      display: grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--yellow);
+      color: var(--bg);
+      font-size: 13px;
+      line-height: 1;
+      transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .screensaver-toggle input:checked + .screensaver-checkmark {
+      background: var(--yellow);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--yellow) 55%, transparent);
+    }
+
+    .screensaver-toggle input:focus-visible + .screensaver-checkmark {
+      outline: 2px solid var(--yellow);
+      outline-offset: 3px;
+    }
+
+    .screensaver-toggle input:not(:checked) + .screensaver-checkmark {
+      color: transparent;
+    }
+
+    .screensaver-toggle:hover .screensaver-checkmark {
+      box-shadow: 0 0 10px color-mix(in srgb, var(--yellow) 55%, transparent);
+    }
+
+    .screensaver-toggle input:disabled + .screensaver-checkmark {
+      opacity: .45;
+    }
+
+    .screensaver-help {
+      margin: 12px 0 0;
+      max-width: 58ch;
+    }
+
+    .screensaver-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: grid;
+      place-items: center;
+      background: var(--bg);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 700ms ease;
+    }
+
+    .screensaver-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .screensaver-stage {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .screensaver-logo {
+      position: absolute;
+      width: clamp(110px, 12vw, 180px);
+      height: auto;
+      filter: drop-shadow(0 0 12px color-mix(in srgb, var(--yellow) 75%, transparent));
+      user-select: none;
+    }
+
+    @media (max-width: 700px) {
+      .screensaver-preference,
+      .screensaver-overlay {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .screensaver-overlay {
+        transition: opacity 0.01ms linear;
+      }
+    }
+
     .skin-button {
       display: inline-flex;
       align-items: center;
@@ -2401,7 +2645,7 @@
           data-view="about"
           type="button"
         >
-          ABOUT
+          PREFERENCES
         </button>
 
       </nav>
@@ -3055,7 +3299,7 @@
           <section class="about-section manual-section skin-section always-open">
 
             <div class="manual-kicker">
-              SKIN
+              PREFERENCES
             </div>
 
             <div class="about-content">
@@ -3063,7 +3307,7 @@
               <div
                 class="skin-picker"
                 role="group"
-                aria-label="Site color skin"
+                aria-label="Site preferences"
               >
 
                 <button
@@ -3095,6 +3339,54 @@
                 >
                   RED
                 </button>
+
+              </div>
+
+              <div
+                id="installPwa"
+                class="install-pwa"
+              >
+                <div class="install-pwa-copy">
+                  <strong>INSTALL MBV</strong>
+                  <span id="installPwaStatus">Add MBV to your device.</span>
+                </div>
+
+                <button
+                  id="installPwaButton"
+                  class="install-pwa-button"
+                  type="button"
+                >
+                  ADD APP
+                </button>
+              </div>
+
+              <div
+                id="installPwaIos"
+                class="install-pwa-ios"
+                hidden
+              >
+                <strong>IPHONE / IPAD</strong>
+                <span>In Safari, tap Share, then choose Add to Home Screen. Open MBV from the new icon for the full app experience.</span>
+              </div>
+
+              <div class="screensaver-preference">
+                <div class="screensaver-preference-row">
+                  <div class="screensaver-preference-copy">
+                    <strong>SCREENSAVER</strong>
+                    <span>Activates after 5 minutes of inactivity.</span>
+                  </div>
+
+                  <div class="screensaver-controls">
+                    <label class="screensaver-toggle" for="screensaverEnabled">
+                      <input
+                        id="screensaverEnabled"
+                        type="checkbox"
+                        checked
+                      >
+                      <span class="screensaver-checkmark" aria-hidden="true">&#10003;</span>
+                    </label>
+                  </div>
+                </div>
 
               </div>
 
@@ -3247,6 +3539,25 @@
 
   </div>
 
+  <div
+    id="screensaverOverlay"
+    class="screensaver-overlay"
+    aria-hidden="true"
+  >
+    <div id="screensaverStage" class="screensaver-stage">
+      <img
+        id="screensaverLogo"
+        class="screensaver-logo"
+        src="images/MBV_YELLOWc.png"
+        alt=""
+      >
+    </div>
+
+    <div class="screensaver-message">
+      <span>Press any key to return.</span>
+    </div>
+  </div>
+
 
   <!-- =========================================================
        AUDIO
@@ -3311,6 +3622,30 @@
       document.querySelectorAll(
         ".skin-button"
       );
+
+    const installPwa =
+      document.getElementById("installPwa");
+
+    const installPwaButton =
+      document.getElementById("installPwaButton");
+
+    const installPwaStatus =
+      document.getElementById("installPwaStatus");
+
+    const installPwaIos =
+      document.getElementById("installPwaIos");
+
+    const screensaverEnabled =
+      document.getElementById("screensaverEnabled");
+
+    const screensaverOverlay =
+      document.getElementById("screensaverOverlay");
+
+    const screensaverStage =
+      document.getElementById("screensaverStage");
+
+    const screensaverLogo =
+      document.getElementById("screensaverLogo");
 
     const artist =
       document.getElementById("artist");
@@ -3466,6 +3801,40 @@
 
     let nowPlayingTimer =
       null;
+
+    let deferredInstallPrompt =
+      null;
+
+    let screensaverTimer =
+      null;
+
+    let screensaverAnimation =
+      null;
+
+    let screensaverActive =
+      false;
+
+    let screensaverIsEnabled =
+      true;
+
+    let screensaverActivatedAt =
+      0;
+
+    let screensaverLastFrame =
+      0;
+
+    let screensaverPosition = {
+      x: 0,
+      y: 0,
+      velocityX: .16,
+      velocityY: .13
+    };
+
+    let reconnectTimer =
+      null;
+
+    let playbackRequested =
+      false;
 
 
     let audioContext =
@@ -4171,6 +4540,9 @@
         audio.paused
       ) {
 
+        playbackRequested =
+          true;
+
         try {
 
           setPlayerState(
@@ -4196,14 +4568,22 @@
           );
 
 
-          setPlayerState(
-            "ready"
-          );
+          scheduleReconnect();
 
 
         }
 
       } else {
+
+        playbackRequested =
+          false;
+
+        clearTimeout(
+          reconnectTimer
+        );
+
+        reconnectTimer =
+          null;
 
         audio.pause();
 
@@ -4214,6 +4594,49 @@
 
 
       }
+
+    }
+
+
+    function scheduleReconnect() {
+
+      if (
+        !playbackRequested ||
+        reconnectTimer !== null
+      ) {
+        return;
+      }
+
+      setPlayerState(
+        "reconnecting"
+      );
+
+      reconnectTimer =
+        setTimeout(
+          async () => {
+            reconnectTimer =
+              null;
+
+            if (
+              !playbackRequested
+            ) {
+              return;
+            }
+
+            try {
+              audio.load();
+              await audio.play();
+            } catch (error) {
+              console.warn(
+                "Stream reconnect failed; retrying:",
+                error
+              );
+
+              scheduleReconnect();
+            }
+          },
+          3000
+        );
 
     }
 
@@ -4380,6 +4803,13 @@
       "playing",
       () => {
 
+        clearTimeout(
+          reconnectTimer
+        );
+
+        reconnectTimer =
+          null;
+
         setPlayerState(
           isMuted
             ? "muted"
@@ -4439,9 +4869,7 @@
           !audio.paused
         ) {
 
-          setPlayerState(
-            "reconnecting"
-          );
+          scheduleReconnect();
 
         }
 
@@ -4453,10 +4881,11 @@
       "error",
       () => {
 
-        if (audio.error) {
-          setPlayerState(
-            "offline"
-          );
+        if (
+          audio.error &&
+          playbackRequested
+        ) {
+          scheduleReconnect();
 
         }
 
@@ -4755,6 +5184,14 @@
     document.addEventListener(
       "keydown",
       event => {
+
+        if (
+          screensaverActive
+        ) {
+          event.preventDefault();
+          exitScreensaver();
+          return;
+        }
 
         if (
           event.key === "Escape" &&
@@ -5771,7 +6208,7 @@
       }).format(now);
 
       const label =
-        `${listenerTimeZone} · ${time}`;
+        `${time}`;
 
       listenerTimezone.textContent = label;
       scheduleTimezone.textContent = label;
@@ -6363,6 +6800,13 @@
       brandLogo.src =
         skin.logo;
 
+      if (
+        screensaverLogo
+      ) {
+        screensaverLogo.src =
+          skin.logo;
+      }
+
       skinButtons.forEach(
         button => {
           button.setAttribute(
@@ -6396,6 +6840,438 @@
         localStorage.getItem("mbv-skin") ||
         "classic"
       );
+
+    }
+
+
+    function isDesktopScreensaver() {
+
+      return window.matchMedia(
+        "(min-width: 701px)"
+      ).matches;
+
+    }
+
+
+    function stopScreensaverAnimation() {
+
+      if (
+        screensaverAnimation
+      ) {
+        cancelAnimationFrame(
+          screensaverAnimation
+        );
+
+        screensaverAnimation =
+          null;
+      }
+
+    }
+
+
+    function animateScreensaver(
+      timestamp
+    ) {
+
+      if (
+        !screensaverActive
+      ) {
+        return;
+      }
+
+      const elapsed =
+        Math.min(
+          timestamp - screensaverLastFrame,
+          32
+        );
+
+      screensaverLastFrame =
+        timestamp;
+
+      const stageWidth =
+        screensaverStage.clientWidth;
+
+      const stageHeight =
+        screensaverStage.clientHeight;
+
+      const logoWidth =
+        screensaverLogo.offsetWidth;
+
+      const logoHeight =
+        screensaverLogo.offsetHeight;
+
+      const maxX =
+        Math.max(0, stageWidth - logoWidth);
+
+      const maxY =
+        Math.max(0, stageHeight - logoHeight);
+
+      screensaverPosition.x +=
+        screensaverPosition.velocityX * elapsed;
+
+      screensaverPosition.y +=
+        screensaverPosition.velocityY * elapsed;
+
+      if (
+        screensaverPosition.x <= 0 ||
+        screensaverPosition.x >= maxX
+      ) {
+        screensaverPosition.velocityX *=
+          -1;
+        screensaverPosition.x =
+          Math.max(0, Math.min(maxX, screensaverPosition.x));
+      }
+
+      if (
+        screensaverPosition.y <= 0 ||
+        screensaverPosition.y >= maxY
+      ) {
+        screensaverPosition.velocityY *=
+          -1;
+        screensaverPosition.y =
+          Math.max(0, Math.min(maxY, screensaverPosition.y));
+      }
+
+      screensaverLogo.style.transform =
+        `translate(${screensaverPosition.x}px, ${screensaverPosition.y}px)`;
+
+      screensaverAnimation =
+        requestAnimationFrame(
+          animateScreensaver
+        );
+
+    }
+
+
+    function enterScreensaver() {
+
+      if (
+        !isDesktopScreensaver() ||
+        !screensaverIsEnabled ||
+        screensaverActive
+      ) {
+        return;
+      }
+
+      clearTimeout(
+        screensaverTimer
+      );
+
+      screensaverTimer =
+        null;
+
+      screensaverActive =
+        true;
+
+      screensaverActivatedAt =
+        performance.now();
+
+      screensaverLogo.src =
+        brandLogo.src;
+
+      screensaverLastFrame =
+        performance.now();
+
+      screensaverPosition = {
+        x: Math.max(0, (screensaverStage.clientWidth - screensaverLogo.offsetWidth) / 2),
+        y: Math.max(0, (screensaverStage.clientHeight - screensaverLogo.offsetHeight) / 2),
+        velocityX: .16,
+        velocityY: .13
+      };
+
+      screensaverOverlay.classList.add(
+        "active"
+      );
+
+      screensaverOverlay.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      stopScreensaverAnimation();
+
+      screensaverAnimation =
+        requestAnimationFrame(
+          animateScreensaver
+        );
+
+    }
+
+
+    function exitScreensaver() {
+
+      if (
+        !screensaverActive
+      ) {
+        return;
+      }
+
+      screensaverActive =
+        false;
+
+      screensaverOverlay.classList.remove(
+        "active"
+      );
+
+      screensaverOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      stopScreensaverAnimation();
+      resetScreensaverTimer();
+
+    }
+
+
+    function resetScreensaverTimer() {
+
+      clearTimeout(
+        screensaverTimer
+      );
+
+      screensaverTimer =
+        null;
+
+      if (
+        isDesktopScreensaver() &&
+        screensaverIsEnabled &&
+        !screensaverActive
+      ) {
+        screensaverTimer =
+          setTimeout(
+            enterScreensaver,
+            5 * 60 * 1000
+          );
+      }
+
+    }
+
+
+    function handleScreensaverActivity() {
+
+      if (
+        screensaverActive
+      ) {
+        if (
+          performance.now() - screensaverActivatedAt < 700
+        ) {
+          return;
+        }
+
+        exitScreensaver();
+        return;
+      }
+
+      resetScreensaverTimer();
+
+    }
+
+
+    function initializeScreensaver() {
+
+      if (
+        !screensaverOverlay ||
+        !screensaverEnabled
+      ) {
+        return;
+      }
+
+      screensaverIsEnabled =
+        localStorage.getItem("mbv-screensaver-enabled") !== "false";
+
+      screensaverEnabled.checked =
+        screensaverIsEnabled;
+
+      screensaverEnabled.addEventListener(
+        "change",
+        () => {
+          screensaverIsEnabled =
+            screensaverEnabled.checked;
+
+          localStorage.setItem(
+            "mbv-screensaver-enabled",
+            String(screensaverIsEnabled)
+          );
+
+          if (
+            !screensaverIsEnabled &&
+            screensaverActive
+          ) {
+            exitScreensaver();
+          }
+
+          resetScreensaverTimer();
+        }
+      );
+
+      [
+        "pointerdown",
+        "pointermove",
+        "wheel",
+        "keydown",
+        "touchstart"
+      ].forEach(
+        eventName => {
+          document.addEventListener(
+            eventName,
+            handleScreensaverActivity,
+            { passive: eventName !== "keydown" }
+          );
+        }
+      );
+
+      window.addEventListener(
+        "resize",
+        () => {
+          if (
+            !isDesktopScreensaver() &&
+            screensaverActive
+          ) {
+            exitScreensaver();
+            return;
+          }
+
+          resetScreensaverTimer();
+        }
+      );
+
+      resetScreensaverTimer();
+
+    }
+
+
+    function initializePwaInstall() {
+
+      if (
+        !installPwa ||
+        !installPwaButton
+      ) {
+        return;
+      }
+
+      let isInstalled =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true;
+
+      const isIos =
+        /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (
+          navigator.platform === "MacIntel" &&
+          navigator.maxTouchPoints > 1
+        );
+
+      if (
+        isInstalled
+      ) {
+        installPwa.classList.add("installed");
+        installPwaButton.hidden = true;
+        installPwaIos.hidden = true;
+        installPwaStatus.textContent =
+          "MBV app is already installed on this device.";
+      } else if (
+        isIos
+      ) {
+        installPwaButton.hidden = true;
+        installPwaIos.hidden = false;
+        installPwaStatus.textContent =
+          "Install MBV from Safari's Share menu.";
+      }
+
+      window.addEventListener(
+        "beforeinstallprompt",
+        event => {
+          event.preventDefault();
+          deferredInstallPrompt = event;
+
+          if (
+            !isInstalled &&
+            !isIos
+          ) {
+            installPwaButton.textContent =
+              "ADD APP";
+            installPwaStatus.textContent =
+              "Install MBV without browser chrome.";
+          }
+        }
+      );
+
+      installPwaButton.addEventListener(
+        "click",
+        async () => {
+          if (
+            isInstalled
+          ) {
+            return;
+          }
+
+          if (
+            !deferredInstallPrompt
+          ) {
+            installPwaStatus.textContent =
+              "Use your browser menu to install MBV.";
+            return;
+          }
+
+          deferredInstallPrompt.prompt();
+
+          const choice =
+            await deferredInstallPrompt.userChoice;
+
+          if (
+            choice.outcome === "accepted"
+          ) {
+            isInstalled =
+              true;
+
+            installPwa.classList.add("installed");
+            installPwaStatus.textContent =
+              "MBV app is already installed on this device.";
+            installPwaButton.hidden = true;
+          }
+
+          deferredInstallPrompt =
+            null;
+
+          if (
+            choice.outcome !== "accepted"
+          ) {
+            installPwaButton.hidden = false;
+            installPwaButton.textContent =
+              "ADD APP";
+          }
+        }
+      );
+
+      window.addEventListener(
+        "appinstalled",
+        () => {
+          isInstalled =
+            true;
+
+          installPwa.classList.add("installed");
+          installPwa.hidden = false;
+          installPwaIos.hidden = true;
+          installPwaStatus.textContent =
+            "MBV app is already installed on this device.";
+          installPwaButton.hidden = true;
+          deferredInstallPrompt =
+            null;
+        }
+      );
+
+      if (
+        "serviceWorker" in navigator &&
+        /^https?:$/.test(window.location.protocol)
+      ) {
+        navigator.serviceWorker.register("sw.js")
+          .catch(
+            error => console.warn(
+              "MBV service worker registration failed:",
+              error
+            )
+          );
+      }
 
     }
 
@@ -6441,9 +7317,30 @@
 
       initializeSkin();
 
+      initializeScreensaver();
+
+      initializePwaInstall();
+
       app.classList.add(
         "listen-layout"
       );
+
+      const launchParameters =
+        new URLSearchParams(
+          window.location.search
+        );
+
+      const isPwaLaunch =
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true ||
+        launchParameters.has("launch") ||
+        launchParameters.get("view") === "live";
+
+      if (
+        isPwaLaunch
+      ) {
+        applyNavigation("live");
+      }
 
       createSchedule();
 
