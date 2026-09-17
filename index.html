@@ -14,11 +14,11 @@
       --surface: #181818;
       --white: #f4f4f4;
       --muted: #999;
-      --muted-2: #666;
+      --muted-2: #a6a6a6;
       --line: #303030;
       --yellow: #f8ca07;
-      --blue: #1865ba;
-      --red: #e22b24;
+      --blue: #65a9e8;
+      --red: #ff6b63;
 
       --content-width: 1080px;
       --about-width: 640px;
@@ -28,6 +28,12 @@
 
     * {
       box-sizing: border-box;
+    }
+
+    ::selection {
+      background: var(--yellow);
+      color: var(--bg);
+      text-shadow: none;
     }
 
     html {
@@ -102,7 +108,35 @@
 
       margin: 0 auto;
 
+      cursor: pointer;
+      filter: drop-shadow(0 0 5px color-mix(in srgb, var(--yellow) 45%, transparent));
+      animation: logo-shop-flicker 4.8s ease-in-out infinite;
+      transition: filter 180ms ease, transform 180ms ease;
       user-select: none;
+    }
+
+    .brand:hover,
+    .brand:focus-visible {
+      filter: drop-shadow(0 0 12px color-mix(in srgb, var(--yellow) 90%, transparent));
+      outline: none;
+      transform: scale(1.025);
+    }
+
+    @keyframes logo-shop-flicker {
+      0%,
+      88%,
+      91%,
+      100% {
+        filter: drop-shadow(0 0 5px color-mix(in srgb, var(--yellow) 45%, transparent));
+      }
+
+      89% {
+        filter: drop-shadow(0 0 11px color-mix(in srgb, var(--yellow) 82%, transparent));
+      }
+
+      90% {
+        filter: drop-shadow(0 0 3px color-mix(in srgb, var(--yellow) 28%, transparent));
+      }
     }
 
     .brand-tagline {
@@ -150,6 +184,38 @@
 
     .nav-button.active {
       color: var(--yellow);
+      animation: accent-flicker 3.8s ease-in-out infinite;
+      text-shadow: 0 0 12px color-mix(in srgb, var(--yellow) 70%, transparent);
+    }
+
+    .nav-button.active:hover,
+    .nav-button.active:focus-visible {
+      text-shadow: 0 0 18px color-mix(in srgb, var(--yellow) 90%, transparent);
+    }
+
+    @keyframes accent-flicker {
+      0%,
+      91%,
+      94%,
+      100% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: .62;
+      }
+
+      91% {
+        opacity: 1;
+      }
+
+      92% {
+        opacity: .68;
+      }
+
+      93% {
+        opacity: 1;
+      }
     }
 
 
@@ -235,6 +301,13 @@
       pointer-events: none;
     }
 
+    #liveView.player-paused .timezone-marker {
+      max-height: 0;
+      margin-top: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
     #liveView.active {
       display: flex;
       flex-direction: column;
@@ -267,6 +340,29 @@
       min-width: 0;
 
       text-align: center;
+    }
+
+    .live-orientation-item.current {
+      transform: scale(1.08);
+    }
+
+    .live-orientation-item.next {
+      opacity: .58;
+      transform: scale(.92);
+    }
+
+    .timezone-marker {
+      display: block;
+      max-height: 24px;
+      margin-top: 8px;
+      color: var(--muted-2);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: .08em;
+      text-align: center;
+      text-transform: uppercase;
+      transition: max-height 220ms var(--ease), margin-top 220ms ease, opacity 220ms ease;
+      text-shadow: 0 0 7px color-mix(in srgb, var(--muted-2) 45%, transparent);
     }
 
     .live-orientation-label {
@@ -519,6 +615,22 @@
       animation-play-state: paused;
     }
 
+    .player.playing .signal-canvas,
+    .player.muted .signal-canvas {
+      animation: signal-mobile-pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes signal-mobile-pulse {
+      0%,
+      100% {
+        transform: scale(.985);
+      }
+
+      50% {
+        transform: scale(1.015);
+      }
+    }
+
     @keyframes artwork-spin {
       from {
         transform: rotate(0deg);
@@ -568,7 +680,16 @@
     }
 
     .track-line .artist {
+      color: var(--muted);
+      font-size: .78em;
+      font-weight: 500;
+      letter-spacing: .03em;
+    }
+
+    .track-line #trackTitle {
       color: var(--white);
+      font-size: 1.18em;
+      font-weight: 700;
     }
 
     .track-line .separator {
@@ -576,9 +697,7 @@
     }
 
     .track-actions {
-      display: flex;
-      justify-content: center;
-      margin-top: 8px;
+      display: contents;
     }
 
     .spotify-link {
@@ -594,6 +713,7 @@
     .spotify-link:hover,
     .spotify-link:focus-visible {
       color: var(--yellow);
+      filter: drop-shadow(0 0 8px color-mix(in srgb, var(--yellow) 85%, transparent));
       outline: none;
     }
 
@@ -984,6 +1104,7 @@
     .request-button:hover,
     .request-button:focus-visible {
       color: var(--white);
+      text-shadow: 0 0 12px color-mix(in srgb, var(--yellow) 85%, transparent);
       outline: none;
     }
 
@@ -1073,6 +1194,7 @@
       margin-bottom: 2px;
 
       color: var(--yellow);
+      filter: drop-shadow(0 0 5px color-mix(in srgb, var(--yellow) 65%, transparent));
     }
 
     .schedule-status-icon svg {
@@ -1092,6 +1214,7 @@
       margin-top: 5px;
 
       color: var(--yellow);
+      text-shadow: 0 0 7px color-mix(in srgb, var(--yellow) 55%, transparent);
 
       font-family:
         "SFMono-Regular",
@@ -1175,7 +1298,7 @@
 
       border-top: 1px solid var(--line);
 
-      min-height: 105px;
+      min-height: 170px;
     }
 
     .daypart {
@@ -1188,7 +1311,7 @@
 
       overflow: hidden;
 
-      cursor: pointer;
+      cursor: default;
     }
 
     .daypart:first-child {
@@ -1210,6 +1333,7 @@
 
     .daypart.active .daypart-name {
       color: var(--yellow);
+      text-shadow: 0 0 9px color-mix(in srgb, var(--yellow) 60%, transparent);
     }
 
     .daypart-time {
@@ -1228,13 +1352,15 @@
     }
 
     .daypart-detail {
-      max-height: 0;
+      max-height: 320px;
 
       overflow: hidden;
 
       padding-right: 20px;
 
-      opacity: 0;
+      opacity: 1;
+
+      padding-top: 18px;
 
       transition:
         max-height 220ms var(--ease),
@@ -1294,6 +1420,7 @@
       width: 1px;
 
       background: var(--yellow);
+      box-shadow: 0 0 8px color-mix(in srgb, var(--yellow) 70%, transparent);
 
       pointer-events: none;
 
@@ -1477,6 +1604,20 @@
       );
 
       margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sticker-section {
+      order: 2;
+    }
+
+    .bio-section {
+      order: 1;
+    }
+
+    .about-keyboard {
+      order: 4;
     }
 
     @media (min-width: 701px) {
@@ -1626,7 +1767,7 @@
     }
 
     .sticker-card span {
-      color: var(--muted);
+      color: var(--white);
 
       font-size: 14px;
     }
@@ -1679,6 +1820,7 @@
       font-size: 11px !important;
       letter-spacing: .06em;
       text-transform: uppercase;
+      text-shadow: 0 0 7px color-mix(in srgb, var(--yellow) 55%, transparent);
     }
 
     .sticker-order {
@@ -1689,11 +1831,13 @@
       letter-spacing: .08em;
       text-decoration: none;
       text-transform: uppercase;
+      text-shadow: 0 0 7px color-mix(in srgb, var(--yellow) 55%, transparent);
     }
 
     .sticker-order:hover,
     .sticker-order:focus-visible {
       color: var(--white);
+      text-shadow: 0 0 12px color-mix(in srgb, var(--yellow) 85%, transparent);
       outline: none;
     }
 
@@ -1738,6 +1882,8 @@
     .skin-button[aria-pressed="true"] {
       border-color: var(--skin-color);
       color: var(--skin-color);
+      box-shadow: 0 0 12px color-mix(in srgb, var(--skin-color) 70%, transparent);
+      text-shadow: 0 0 8px color-mix(in srgb, var(--skin-color) 70%, transparent);
       outline: none;
     }
 
@@ -1940,6 +2086,10 @@
        ========================================================= */
 
     @media (max-width: 700px) {
+
+      .about-keyboard {
+        display: none;
+      }
 
       #liveView.active {
         padding-top: 26px;
@@ -2189,6 +2339,14 @@
         animation-iteration-count:
           1 !important;
       }
+
+      .nav-button.active {
+        animation: none !important;
+      }
+
+      .brand {
+        animation: none !important;
+      }
     }
   </style>
 </head>
@@ -2208,7 +2366,7 @@
       <img
         id="brandLogo"
         class="brand"
-        src="MBV_YELLOWc.png"
+        src="images/MBV_YELLOWc.png"
         alt="MBV"
       >
 
@@ -2270,7 +2428,7 @@
 
         <div class="live-orientation" aria-live="polite">
 
-          <div class="live-orientation-item">
+          <div class="live-orientation-item current">
             <span class="live-orientation-label">
               NOW
             </span>
@@ -2289,7 +2447,7 @@
             </span>
           </div>
 
-          <div class="live-orientation-item">
+          <div class="live-orientation-item next">
             <span class="live-orientation-label">
               NEXT
             </span>
@@ -2316,6 +2474,12 @@
           </div>
 
         </div>
+
+        <span
+          id="listenerTimezone"
+          class="timezone-marker"
+          aria-live="polite"
+        ></span>
 
         <div
           id="player"
@@ -2398,26 +2562,6 @@
 
               </div>
 
-              <div class="track-actions">
-                <a
-                  id="currentSpotify"
-                  class="spotify-link"
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Find current track on Spotify"
-                  title="Find on Spotify"
-                  hidden
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="12" r="9"></circle>
-                    <path d="M7.5 9.2c3.2-1 6.8-.8 9.6.4"></path>
-                    <path d="M8.2 12.3c2.5-.7 5.3-.5 7.6.5"></path>
-                    <path d="M9 15.1c1.8-.4 3.7-.3 5.4.4"></path>
-                  </svg>
-                </a>
-              </div>
-
             </div>
 
           </div>
@@ -2432,6 +2576,24 @@
             class="controls"
           >
 
+
+            <a
+              id="playerSpotify"
+              class="spotify-link"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Find current track on Spotify"
+              title="Find on Spotify"
+              hidden
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M7.5 9.2c3.2-1 6.8-.8 9.6.4"></path>
+                <path d="M8.2 12.3c2.5-.7 5.3-.5 7.6.5"></path>
+                <path d="M9 15.1c1.8-.4 3.7-.3 5.4.4"></path>
+              </svg>
+            </a>
 
             <!-- VOLUME -->
 
@@ -2713,6 +2875,12 @@
 
           </div>
 
+          <div
+            id="scheduleTimezone"
+            class="timezone-marker"
+            aria-live="polite"
+          ></div>
+
 
           <div class="timeline-scroll">
 
@@ -2782,7 +2950,7 @@
 
           <!-- STICKER SHOP -->
 
-          <section class="about-section manual-section open always-open">
+          <section class="about-section manual-section sticker-section open always-open">
 
             <div class="manual-kicker">
               THANKS FOR YOUR SUPPORT!
@@ -2833,7 +3001,7 @@
 
           <!-- ABOUT -->
 
-          <section class="about-section manual-section always-open">
+          <section class="about-section manual-section bio-section always-open">
 
             <div class="manual-kicker">
             /em-bee-vee/
@@ -2884,7 +3052,7 @@
 
           <!-- CONTROLS -->
 
-          <section class="about-section manual-section always-open">
+          <section class="about-section manual-section skin-section always-open">
 
             <div class="manual-kicker">
               SKIN
@@ -2936,7 +3104,7 @@
 
           <!-- CONTROLS -->
 
-          <section class="about-section manual-section always-open">
+          <section class="about-section manual-section about-keyboard always-open">
             <div class="manual-kicker">
               CONTROLS
             </div>
@@ -3150,8 +3318,8 @@
     const trackTitle =
       document.getElementById("trackTitle");
 
-    const currentSpotify =
-      document.getElementById("currentSpotify");
+    const playerSpotify =
+      document.getElementById("playerSpotify");
 
     const playButton =
       document.getElementById("playButton");
@@ -3206,6 +3374,12 @@
 
     const liveNextCountdown =
       document.getElementById("liveNextCountdown");
+
+    const listenerTimezone =
+      document.getElementById("listenerTimezone");
+
+    const scheduleTimezone =
+      document.getElementById("scheduleTimezone");
 
     const currentShowName =
       document.getElementById("currentShowName");
@@ -3305,6 +3479,10 @@
 
     let signalAnimation =
       null;
+
+    const listenerTimeZone =
+      Intl.DateTimeFormat().resolvedOptions().timeZone ||
+      "Local time";
 
     let currentTrack = {
 
@@ -3739,6 +3917,8 @@
           error
         );
 
+        startSignalAnimation();
+
       }
 
     }
@@ -3867,24 +4047,30 @@
         );
 
 
-      if (
-        !active ||
-        !analyser
-      ) {
+      if (!active) {
 
         return;
       }
 
-
       const data =
         new Uint8Array(
-          analyser.fftSize
+          analyser?.fftSize || 512
         );
 
+      if (analyser) {
+        analyser.getByteTimeDomainData(
+          data
+        );
+      } else {
+        const phase =
+          performance.now() / 260;
 
-      analyser.getByteTimeDomainData(
-        data
-      );
+        for (let i = 0; i < data.length; i++) {
+          data[i] =
+            128 +
+            Math.sin(phase + i * .18) * 18;
+        }
+      }
 
 
       ctx.beginPath();
@@ -5064,10 +5250,10 @@
           .filter(Boolean)
           .join(" ");
 
-      currentSpotify.hidden =
+      playerSpotify.hidden =
         !spotifyQuery;
 
-      currentSpotify.href =
+      playerSpotify.href =
         spotifyQuery
           ? `https://open.spotify.com/search/${encodeURIComponent(spotifyQuery)}`
           : "#";
@@ -5123,7 +5309,7 @@
       }
 
       if (
-        label.includes("dusk") ||
+        label.includes("traff*ck") ||
         Number(startHour) >= 18
       ) {
         return `
@@ -5227,7 +5413,7 @@
 
       {
         name:
-          "DUSK DRIVE",
+          "TRAFF*CK",
 
         start:
           16,
@@ -5518,40 +5704,6 @@
           );
 
 
-          element.addEventListener(
-            "click",
-            () => {
-
-              document
-                .querySelectorAll(
-                  ".daypart.open"
-                )
-                .forEach(
-                  openPart => {
-
-                    if (
-                      openPart !==
-                      element
-                    ) {
-
-                      openPart.classList.remove(
-                        "open"
-                      );
-
-                    }
-
-                  }
-                );
-
-
-              element.classList.toggle(
-                "open"
-              );
-
-            }
-          );
-
-
           dayparts.appendChild(
             element
           );
@@ -5608,6 +5760,23 @@
 
     }
 
+    function updateTimezoneMarkers() {
+      const now = new Date();
+      const time = new Intl.DateTimeFormat([], {
+        timeZone: listenerTimeZone,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZoneName: "short"
+      }).format(now);
+
+      const label =
+        `${listenerTimeZone} · ${time}`;
+
+      listenerTimezone.textContent = label;
+      scheduleTimezone.textContent = label;
+    }
+
 
     function updateScheduleSpotlight() {
 
@@ -5615,7 +5784,7 @@
         !scheduleData.length
       ) {
         currentShowName.textContent =
-          "Schedule unavailable";
+          "Schedule unavailable.";
 
         currentShowIcon.innerHTML =
           getShowIcon("", 12);
@@ -5624,7 +5793,7 @@
           "--:--";
 
         currentShowDescription.textContent =
-          "Station schedule data is not available right now.";
+          "Schedule unavailable.";
 
         nextShowName.textContent =
           "Check back soon";
@@ -5639,10 +5808,10 @@
           "";
 
         liveCurrentShow.textContent =
-          "Connecting to MBV";
+          "Connecting...";
 
         liveCurrentMood.textContent =
-          "24/7 autonomous radio";
+          "24/7 DnB";
 
         liveCurrentIcon.innerHTML =
           getShowIcon("", 12);
@@ -5733,11 +5902,11 @@
 
       liveCurrentShow.textContent =
         current?.name ||
-        "Between dayparts";
+        "Massive Brain Volume";
 
       liveCurrentMood.textContent =
         current?.description ||
-        "24/7 autonomous radio";
+        "24/7 DnB";
 
       liveCurrentIcon.innerHTML =
         getShowIcon(
@@ -5928,6 +6097,11 @@
     setInterval(
       updateScheduleSpotlight,
       60000
+    );
+
+    setInterval(
+      updateTimezoneMarkers,
+      1000
     );
 
 
@@ -6160,15 +6334,15 @@
     const skinConfig = {
       classic: {
         color: "#f8ca07",
-        logo: "MBV_YELLOWc.png"
+        logo: "images/MBV_YELLOWc.png"
       },
       blue: {
-        color: "#1865ba",
-        logo: "MBV_BLUE.png"
+        color: "#65a9e8",
+        logo: "images/MBV_BLUE.png"
       },
       red: {
-        color: "#e22b24",
-        logo: "MBV_RED.png"
+        color: "#ff6b63",
+        logo: "images/MBV_RED.png"
       }
     };
 
@@ -6276,6 +6450,8 @@
       renderRecentTracks([]);
 
       updateNowMarker();
+
+      updateTimezoneMarkers();
 
       configureAudio();
 
