@@ -7,11 +7,13 @@
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
   <meta name="theme-color" content="#121212">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="MBV Radio">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="mbv-icon-192.png">
   <title>MBV | 24/7 Drum & Bass Radio</title>
     <link rel="manifest" href="manifest.webmanifest">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <style>
     :root {
       --bg: #121212;
@@ -38,6 +40,11 @@
       background: var(--yellow);
       color: var(--bg);
       text-shadow: none;
+    }
+
+    :where(button, a, input, select, textarea):focus-visible {
+      outline: 2px solid var(--yellow) !important;
+      outline-offset: 3px;
     }
 
     html {
@@ -394,11 +401,11 @@
     .live-orientation-mood {
       display: block;
       margin-top: 2px;
-      overflow: hidden;
+      overflow-wrap: anywhere;
       color: var(--muted);
       font-size: 11px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      line-height: 1.35;
+      white-space: normal;
     }
 
     .live-orientation-icon {
@@ -1634,6 +1641,16 @@
       .about-container > .about-section {
         min-width: 0;
       }
+
+      .bio-section {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .skin-section {
+        grid-column: 2;
+        grid-row: 1;
+      }
     }
 
     .about-content {
@@ -2043,6 +2060,74 @@
       opacity: .45;
     }
 
+    .motion-preference {
+      margin-top: 16px;
+    }
+
+    .motion-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--yellow);
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .motion-toggle input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .motion-checkmark {
+      display: grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--yellow);
+      color: var(--bg);
+      font-size: 13px;
+      line-height: 1;
+      transition: background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .motion-toggle input:checked + .motion-checkmark {
+      background: var(--yellow);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--yellow) 55%, transparent);
+    }
+
+    .motion-toggle input:not(:checked) + .motion-checkmark {
+      color: transparent;
+    }
+
+    .motion-toggle input:focus-visible + .motion-checkmark {
+      outline: 2px solid var(--yellow);
+      outline-offset: 3px;
+    }
+
+    html.reduce-motion .artwork,
+    html.reduce-motion .brand,
+    html.reduce-motion .nav-button.active {
+      animation: none !important;
+    }
+
+    html.reduce-motion .signal {
+      display: none;
+    }
+
+    html.reduce-motion * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      filter: none !important;
+      text-shadow: none !important;
+      box-shadow: none !important;
+      transition-duration: 0.01ms !important;
+    }
+
     .screensaver-help {
       margin: 12px 0 0;
       max-width: 58ch;
@@ -2083,6 +2168,10 @@
       .screensaver-preference,
       .screensaver-overlay {
         display: none;
+      }
+
+      .live-orientation-mood {
+        font-size: 10px;
       }
     }
 
@@ -2157,7 +2246,11 @@
 
       padding: 0 16px;
 
-      border: 1px solid var(--line);
+      border: 1px solid var(--yellow);
+
+      box-shadow:
+        0 0 6px color-mix(in srgb, var(--yellow) 55%, transparent),
+        0 0 18px color-mix(in srgb, var(--yellow) 22%, transparent);
 
       background: #161616;
 
@@ -2645,7 +2738,7 @@
           data-view="about"
           type="button"
         >
-          PREFERENCES
+          ABOUT
         </button>
 
       </nav>
@@ -3348,7 +3441,7 @@
               >
                 <div class="install-pwa-copy">
                   <strong>INSTALL MBV</strong>
-                  <span id="installPwaStatus">Add MBV to your device.</span>
+                  <span id="installPwaStatus" aria-live="polite">Add MBV to your device.</span>
                 </div>
 
                 <button
@@ -3365,8 +3458,8 @@
                 class="install-pwa-ios"
                 hidden
               >
-                <strong>IPHONE / IPAD</strong>
-                <span>In Safari, tap Share, then choose Add to Home Screen. Open MBV from the new icon for the full app experience.</span>
+                <strong>IOS</strong>
+                <span>In Safari, tap Share, then choose Add to Home Screen.</span>
               </div>
 
               <div class="screensaver-preference">
@@ -3388,6 +3481,17 @@
                   </div>
                 </div>
 
+              </div>
+
+              <div class="motion-preference">
+                <label class="motion-toggle" for="reduceMotionEnabled">
+                  <input
+                    id="reduceMotionEnabled"
+                    type="checkbox"
+                  >
+                  <span class="motion-checkmark" aria-hidden="true">&#10003;</span>
+                  REDUCE MOTION
+                </label>
               </div>
 
             </div>
@@ -3638,6 +3742,9 @@
     const screensaverEnabled =
       document.getElementById("screensaverEnabled");
 
+    const reduceMotionEnabled =
+      document.getElementById("reduceMotionEnabled");
+
     const screensaverOverlay =
       document.getElementById("screensaverOverlay");
 
@@ -3863,6 +3970,10 @@
     };
 
 
+    const mediaSessionSupported =
+      "mediaSession" in navigator;
+
+
     /* =========================================================
        NAVIGATION ORDER
        ========================================================= */
@@ -3936,6 +4047,8 @@
       updateSignalState();
 
       updateControls();
+
+      updateMediaSessionPlaybackState();
 
       updateMiniPlayer();
 
@@ -4176,6 +4289,121 @@
     }
 
 
+    function updateMediaSessionPlaybackState() {
+
+      if (
+        !mediaSessionSupported
+      ) {
+        return;
+      }
+
+      navigator.mediaSession.playbackState =
+        playerState === "playing" ||
+        playerState === "muted"
+          ? "playing"
+          : "paused";
+
+    }
+
+
+    function updateMediaSessionMetadata() {
+
+      if (
+        !mediaSessionSupported
+      ) {
+        return;
+      }
+
+      const title =
+        currentTrack.title ||
+        "MBV Radio";
+
+      const artistName =
+        currentTrack.artist ||
+        "Massive Brain Volume";
+
+      const artworkUrl =
+        currentTrack.artwork &&
+        currentTrack.artwork !== "dookie.png"
+          ? new URL(
+              currentTrack.artwork,
+              window.location.href
+            ).href
+          : new URL(
+              "images/MBV_YELLOWc.png",
+              window.location.href
+            ).href;
+
+      const artworkType =
+        /\.jpe?g(?:$|\?)/i.test(artworkUrl)
+          ? "image/jpeg"
+          : "image/png";
+
+      navigator.mediaSession.metadata =
+        new MediaMetadata({
+          title,
+          artist: artistName,
+          album: currentTrack.show || "MBV Radio",
+          artwork: [
+            {
+              src: artworkUrl,
+              sizes: "512x512",
+              type: artworkType
+            }
+          ]
+        });
+
+    }
+
+
+    function initializeMediaSession() {
+
+      if (
+        !mediaSessionSupported
+      ) {
+        return;
+      }
+
+      const actionHandlers = {
+        play: () => {
+          if (audio.paused) {
+            togglePlayback();
+          }
+        },
+        pause: () => {
+          if (!audio.paused) {
+            togglePlayback();
+          }
+        },
+        stop: () => {
+          if (!audio.paused) {
+            togglePlayback();
+          }
+        }
+      };
+
+      Object.entries(actionHandlers).forEach(
+        ([action, handler]) => {
+          try {
+            navigator.mediaSession.setActionHandler(
+              action,
+              handler
+            );
+          } catch (error) {
+            console.warn(
+              `Media Session action unavailable: ${action}`,
+              error
+            );
+          }
+        }
+      );
+
+      updateMediaSessionMetadata();
+      updateMediaSessionPlaybackState();
+
+    }
+
+
     /* =========================================================
        SIGNAL STATE
        ========================================================= */
@@ -4296,6 +4524,14 @@
     function startSignalAnimation() {
 
       if (
+        document.documentElement.classList.contains(
+          "reduce-motion"
+        )
+      ) {
+        return;
+      }
+
+      if (
         signalAnimation
       ) {
         cancelAnimationFrame(
@@ -4305,6 +4541,22 @@
 
 
       drawSignal();
+
+    }
+
+
+    function stopSignalAnimation() {
+
+      if (
+        signalAnimation
+      ) {
+        cancelAnimationFrame(
+          signalAnimation
+        );
+
+        signalAnimation =
+          null;
+      }
 
     }
 
@@ -5671,6 +5923,8 @@
           newArtwork;
 
       }
+
+      updateMediaSessionMetadata();
 
 
       if (
@@ -7141,6 +7395,67 @@
     }
 
 
+    function initializeReducedMotion() {
+
+      if (
+        !reduceMotionEnabled
+      ) {
+        return;
+      }
+
+      const savedPreference =
+        localStorage.getItem("mbv-reduce-motion");
+
+      const prefersReducedMotion =
+        window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+      const isReducedMotion =
+        savedPreference === null
+          ? prefersReducedMotion
+          : savedPreference === "true";
+
+      reduceMotionEnabled.checked =
+        isReducedMotion;
+
+      document.documentElement.classList.toggle(
+        "reduce-motion",
+        isReducedMotion
+      );
+
+      reduceMotionEnabled.addEventListener(
+        "change",
+        () => {
+          const enabled =
+            reduceMotionEnabled.checked;
+
+          localStorage.setItem(
+            "mbv-reduce-motion",
+            String(enabled)
+          );
+
+          document.documentElement.classList.toggle(
+            "reduce-motion",
+            enabled
+          );
+
+          if (
+            enabled
+          ) {
+            stopSignalAnimation();
+          } else if (
+            playerState === "playing" ||
+            playerState === "muted"
+          ) {
+            startSignalAnimation();
+          }
+        }
+      );
+
+    }
+
+
     function initializePwaInstall() {
 
       if (
@@ -7175,7 +7490,7 @@
         installPwaButton.hidden = true;
         installPwaIos.hidden = false;
         installPwaStatus.textContent =
-          "Install MBV from Safari's Share menu.";
+          "Add MBV from Safari's Share menu.";
       }
 
       window.addEventListener(
@@ -7188,8 +7503,7 @@
             !isInstalled &&
             !isIos
           ) {
-            installPwaButton.textContent =
-              "ADD APP";
+            installPwaButton.hidden = false;
             installPwaStatus.textContent =
               "Install MBV without browser chrome.";
           }
@@ -7200,16 +7514,10 @@
         "click",
         async () => {
           if (
-            isInstalled
-          ) {
-            return;
-          }
-
-          if (
             !deferredInstallPrompt
           ) {
             installPwaStatus.textContent =
-              "Use your browser menu to install MBV.";
+              "Use the browser menu to install MBV.";
             return;
           }
 
@@ -7217,6 +7525,9 @@
 
           const choice =
             await deferredInstallPrompt.userChoice;
+
+          deferredInstallPrompt =
+            null;
 
           if (
             choice.outcome === "accepted"
@@ -7230,15 +7541,10 @@
             installPwaButton.hidden = true;
           }
 
-          deferredInstallPrompt =
-            null;
-
           if (
             choice.outcome !== "accepted"
           ) {
             installPwaButton.hidden = false;
-            installPwaButton.textContent =
-              "ADD APP";
           }
         }
       );
@@ -7250,19 +7556,17 @@
             true;
 
           installPwa.classList.add("installed");
-          installPwa.hidden = false;
+          installPwaButton.hidden = true;
           installPwaIos.hidden = true;
           installPwaStatus.textContent =
             "MBV app is already installed on this device.";
-          installPwaButton.hidden = true;
           deferredInstallPrompt =
             null;
         }
       );
 
       if (
-        "serviceWorker" in navigator &&
-        /^https?:$/.test(window.location.protocol)
+        "serviceWorker" in navigator
       ) {
         navigator.serviceWorker.register("sw.js")
           .catch(
@@ -7317,6 +7621,10 @@
 
       initializeSkin();
 
+      initializeMediaSession();
+
+      initializeReducedMotion();
+
       initializeScreensaver();
 
       initializePwaInstall();
@@ -7324,23 +7632,6 @@
       app.classList.add(
         "listen-layout"
       );
-
-      const launchParameters =
-        new URLSearchParams(
-          window.location.search
-        );
-
-      const isPwaLaunch =
-        window.matchMedia("(display-mode: standalone)").matches ||
-        window.navigator.standalone === true ||
-        launchParameters.has("launch") ||
-        launchParameters.get("view") === "live";
-
-      if (
-        isPwaLaunch
-      ) {
-        applyNavigation("live");
-      }
 
       createSchedule();
 
