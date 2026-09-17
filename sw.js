@@ -1,11 +1,16 @@
-const CACHE_NAME = "mbv-radio-shell-v1";
+const CACHE_NAME = "mbv-radio-shell-v21";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-    "./MBV_YELLOWc.png",
-    "./mbv-icon-192.png",
-    "./mbv-icon-512.png"
+  "./favicon.svg",
+  "./MBV_YELLOWc.png",
+  "./MBV_BLUE.png",
+  "./MBV_RED.png",
+  "./MBV_GREENc.png",
+  "./dookie.png",
+  "./mbv-icon-192.png",
+  "./mbv-icon-512.png"
 ];
 
 self.addEventListener("install", event => {

@@ -1,5 +1,5 @@
 {
-  "name": "MBV - 24/7 Drum & Bass Radio",
+  "name": "MBV",
   "short_name": "MBV Radio",
   "description": "Community-driven 24/7 drum & bass radio from Massive Brain Volume.",
   "start_url": "./",
@@ -9,6 +9,12 @@
   "theme_color": "#121212",
   "orientation": "any",
   "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
     {
       "src": "mbv-icon-192.png",
       "sizes": "192x192",
