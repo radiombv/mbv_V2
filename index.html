@@ -11,6 +11,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="MBV Radio">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <link rel="icon" href="mbv-icon-512.png" type="image/svg+xml">
   <link rel="apple-touch-icon" href="mbv-icon-192.png">
   <title>24/7 Drum & Bass Radio</title>
@@ -222,8 +225,8 @@
       justify-content: center;
       border: 0;
       background: transparent;
-      width: 44px;
-      height: 44px;
+      width: 32px;
+      height: 32px;
       padding: 0;
       color: var(--muted);
       cursor: pointer;
@@ -254,8 +257,8 @@
     }
 
     .nav-button svg {
-      width: 16px;
-      height: 16px;
+      width: 32px;
+      height: 32px;
       fill: currentColor;
     }
 
@@ -417,6 +420,10 @@
       pointer-events: none;
     }
 
+    #listenerTimezone {
+      display: none !important;
+    }
+
     #liveView.active {
       display: flex;
       flex-direction: column;
@@ -454,7 +461,7 @@
     .live-orientation-item.current {
       position: absolute;
       top: 50%;
-      right: calc(50% + 422px);
+      right: calc(50% + 185px);
       width: 180px;
       padding-right: 8px;
       text-align: right;
@@ -465,7 +472,7 @@
     .live-orientation-item.next {
       position: absolute;
       top: 50%;
-      left: calc(50% + 422px);
+      left: calc(50% + 185px);
       width: 180px;
       padding-left: 8px;
       text-align: left;
@@ -842,10 +849,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
+      width: 18px;
+      height: 18px;
       color: var(--muted);
       transition: color 140ms ease;
+      flex-shrink: 0;
+      margin-left: 0.15rem;
     }
 
     .spotify-link:hover,
@@ -2399,10 +2408,6 @@
 
       border: 1px solid var(--yellow);
 
-      box-shadow:
-        0 0 6px color-mix(in srgb, var(--yellow) 55%, transparent),
-        0 0 18px color-mix(in srgb, var(--yellow) 22%, transparent);
-
       background: #161616;
 
       z-index: 100;
@@ -2412,7 +2417,8 @@
 
       transition:
         transform 220ms var(--ease),
-        opacity 180ms ease;
+        opacity 180ms ease,
+        box-shadow 180ms ease;
     }
 
     .mini-player.visible {
@@ -2421,6 +2427,12 @@
 
       opacity: 1;
       pointer-events: auto;
+    }
+
+    .mini-player.is-playing {
+      box-shadow:
+        0 0 6px color-mix(in srgb, var(--yellow) 55%, transparent),
+        0 0 18px color-mix(in srgb, var(--yellow) 22%, transparent);
     }
 
     .mini-info {
@@ -3117,7 +3129,6 @@
             id="controls"
             class="controls"
           >
-
 
             <a
               id="playerSpotify"
@@ -4346,6 +4357,11 @@
         miniPlayerHasAppeared
       );
 
+      miniPlayer.classList.toggle(
+        "is-playing",
+        playerState === "playing"
+      );
+
 
       miniShow.textContent =
         currentTrack.show ||
@@ -5013,44 +5029,16 @@
       }
 
 
+      const playButtonLabel =
+        playButton.getAttribute("aria-label") || "Play";
+
+      const userWantsToPause =
+        playButtonLabel === "Pause";
+
+
       if (
-        audio.paused
+        userWantsToPause
       ) {
-
-        playbackRequested =
-          true;
-
-        try {
-
-          setPlayerState(
-            "loading"
-          );
-
-
-          await audio.play();
-
-
-          setPlayerState(
-            isMuted
-              ? "muted"
-              : "playing"
-          );
-
-
-        } catch (error) {
-
-          console.error(
-            "Playback failed:",
-            error
-          );
-
-
-          scheduleReconnect();
-
-
-        }
-
-      } else {
 
         playbackRequested =
           false;
@@ -5069,6 +5057,48 @@
           "paused"
         );
 
+        return;
+
+      }
+
+
+      playbackRequested =
+        true;
+
+      try {
+
+        setPlayerState(
+          "loading"
+        );
+
+
+        await audio.play();
+
+
+        setPlayerState(
+          isMuted
+            ? "muted"
+            : "playing"
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Playback failed:",
+          error
+        );
+
+        if (
+          playerState !== "loading"
+        ) {
+          setPlayerState(
+            "paused"
+          );
+        }
+
+        scheduleReconnect();
+
 
       }
 
@@ -5079,7 +5109,8 @@
 
       if (
         !playbackRequested ||
-        reconnectTimer !== null
+        reconnectTimer !== null ||
+        audio.paused
       ) {
         return;
       }
@@ -5095,13 +5126,20 @@
               null;
 
             if (
-              !playbackRequested
+              !playbackRequested ||
+              audio.paused
             ) {
               return;
             }
 
             try {
-              audio.load();
+              if (
+                !audio.src ||
+                !audio.src.includes(CONFIG.streamUrl)
+              ) {
+                audio.src = CONFIG.streamUrl;
+              }
+
               await audio.play();
             } catch (error) {
               console.warn(
@@ -5339,7 +5377,9 @@
       () => {
 
         if (
-          !audio.paused
+          playbackRequested &&
+          !audio.paused &&
+          playerState !== "loading"
         ) {
 
           scheduleReconnect();
@@ -5356,7 +5396,9 @@
 
         if (
           audio.error &&
-          playbackRequested
+          playbackRequested &&
+          !audio.paused &&
+          playerState !== "loading"
         ) {
           scheduleReconnect();
 
@@ -5570,16 +5612,6 @@
     function navigateTo(
       viewName
     ) {
-      if (
-        document.startViewTransition
-      ) {
-        document.startViewTransition(
-          () => applyNavigation(viewName)
-        );
-
-        return;
-      }
-
       applyNavigation(
         viewName
       );
@@ -7781,7 +7813,45 @@
       if (
         "serviceWorker" in navigator
       ) {
-        navigator.serviceWorker.register("sw.js?v=21")
+        navigator.serviceWorker.register(
+          "sw.js?v=23",
+          {
+            updateViaCache: "none"
+          }
+        )
+          .then(registration => {
+            if (
+              registration.waiting
+            ) {
+              registration.waiting.postMessage({
+                type: "SKIP_WAITING"
+              });
+            }
+
+            registration.addEventListener(
+              "updatefound",
+              () => {
+                const installingWorker =
+                  registration.installing;
+
+                if (
+                  installingWorker
+                ) {
+                  installingWorker.addEventListener(
+                    "statechange",
+                    () => {
+                      if (
+                        installingWorker.state === "installed" &&
+                        navigator.serviceWorker.controller
+                      ) {
+                        window.location.reload();
+                      }
+                    }
+                  );
+                }
+              }
+            );
+          })
           .catch(
             error => console.warn(
               "MBV service worker registration failed:",
@@ -7805,8 +7875,6 @@
 
         audio.src =
           CONFIG.streamUrl;
-
-        audio.load();
 
       }
 
