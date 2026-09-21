@@ -1,8 +1,9 @@
-const CACHE_NAME = "mbv-radio-shell-v23";
+const CACHE_NAME = "mbv-radio-shell-v25";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./favicon.png",
   "./favicon.svg",
   "./MBV_YELLOWc.png",
   "./MBV_BLUE.png",

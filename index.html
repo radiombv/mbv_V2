@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- =======================================================
+       SEO INFO + APP METADATA
+       ======================================================= -->
   <meta charset="UTF-8">
   <meta
     name="viewport"
@@ -18,6 +21,10 @@
   <link rel="apple-touch-icon" href="mbv-icon-192.png">
   <title>24/7 Drum & Bass Radio</title>
     <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- =======================================================
+       PAGE SETUP + GLOBAL STYLES
+       ======================================================= -->
   <style>
     :root {
       --bg: #121212;
@@ -29,6 +36,9 @@
       --yellow: #f8ca07;
       --blue: #044CAC;
       --red: #FB0D1D;
+      --green: #02a602
+
+;
 
       --content-width: 1080px;
       --about-width: 640px;
@@ -93,7 +103,7 @@
 
 
     /* =========================================================
-       LOGO n NAV
+       NAV BAR + BRAND
        ========================================================= */
 
     .site-shell {
@@ -517,6 +527,20 @@
       font-size: 9px;
       letter-spacing: .1em;
       text-transform: uppercase;
+    }
+
+    .live-orientation-label.now-label,
+    .live-next-countdown {
+      color: var(--yellow);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .live-orientation-label.now-label {
+      display: block;
+      margin-top: 4px;
     }
 
     .live-orientation-name {
@@ -1093,16 +1117,63 @@
        REQUEST
        ========================================================= */
 
+    .app.requesting .site-shell,
+    .app.requesting .brand,
+    .app.requesting .brand-tagline,
+    .app.requesting .primary-nav,
+    .app.requesting .view,
+    .app.requesting .listen-note,
+    .app.requesting .mini-player {
+      filter: blur(8px) saturate(.72);
+      transition: filter 280ms var(--ease);
+      will-change: filter;
+    }
+
     .request-view {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(9, 9, 9, .38);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 280ms var(--ease);
+      will-change: opacity;
+    }
+
+    .request-view.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .request-panel {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       width: min(
         calc(100% - 40px),
         420px
       );
 
-      margin: 0 auto;
-
       padding: 18px;
       background: var(--surface);
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      box-shadow: 0 20px 42px rgba(0, 0, 0, .35);
+      opacity: 0;
+      transform: translateY(12px) scale(.98);
+      transition: opacity 280ms var(--ease), transform 280ms var(--ease);
+      filter: none;
+      text-align: center;
+      will-change: transform, opacity;
+    }
+
+    .request-view.open .request-panel {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
     .request-view h2 {
@@ -1111,6 +1182,7 @@
       font-weight: 600;
       letter-spacing: .02em;
       text-transform: uppercase;
+      text-align: center;
     }
 
     .request-view p {
@@ -1119,6 +1191,7 @@
       color: var(--muted);
 
       font-size: 12px;
+      text-align: center;
     }
 
     .field {
@@ -1126,7 +1199,9 @@
     }
 
     .request-view .field {
+      width: 100%;
       margin-bottom: 12px;
+      text-align: left;
     }
 
     .field label {
@@ -1177,13 +1252,17 @@
     .field input:focus,
     .field textarea:focus {
       border-bottom-color: var(--yellow);
+      outline: none;
+      box-shadow: none;
     }
 
     .request-actions {
       display: flex;
       align-items: center;
+      justify-content: center;
 
       gap: 16px;
+      width: 100%;
 
       margin-top: 16px;
       padding-top: 0;
@@ -2429,12 +2508,6 @@
       pointer-events: auto;
     }
 
-    .mini-player.is-playing {
-      box-shadow:
-        0 0 6px color-mix(in srgb, var(--yellow) 55%, transparent),
-        0 0 18px color-mix(in srgb, var(--yellow) 22%, transparent);
-    }
-
     .mini-info {
       min-width: 0;
       flex: 1;
@@ -2892,7 +2965,7 @@
 
 
     <!-- =======================================================
-         PERSISTENT SHELL
+         PAGE SETUP + SITE SHELL
          ======================================================= -->
 
     <header class="site-shell">
@@ -2962,6 +3035,77 @@
     </header>
 
 
+    <div
+      id="requestView"
+      class="request-view"
+      hidden
+    >
+
+      <div class="request-panel">
+
+        <h2>
+          WHAT'S UP?
+        </h2>
+
+        <p>
+          Send a track request or message to MBV.
+        </p>
+
+
+        <div class="field">
+
+          <label for="requestName">
+            Name
+          </label>
+
+          <input
+            id="requestName"
+            type="text"
+            autocomplete="name"
+          >
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="requestMessage">
+            Message
+          </label>
+
+          <textarea
+            id="requestMessage"
+            rows="4"
+          ></textarea>
+
+        </div>
+
+
+        <div class="request-actions">
+
+          <button
+            id="sendRequest"
+            class="request-button"
+            type="button"
+          >
+            SEND
+          </button>
+
+          <button
+            id="cancelRequest"
+            class="request-button secondary"
+            type="button"
+          >
+            BACK
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
     <!-- =======================================================
          VIEWS
          ======================================================= -->
@@ -2990,9 +3134,6 @@
           <div class="live-orientation" aria-live="polite">
 
           <div class="live-orientation-item current">
-            <span class="live-orientation-label">
-              NOW
-            </span>
             <strong
               id="liveCurrentShow"
               class="live-orientation-name"
@@ -3006,12 +3147,12 @@
             >
               24/7 DnB
             </span>
+            <span class="live-orientation-label now-label">
+              NOW
+            </span>
           </div>
 
           <div class="live-orientation-item next">
-            <span class="live-orientation-label">
-              NEXT
-            </span>
             <strong
               id="liveNextShow"
               class="live-orientation-name"
@@ -3042,7 +3183,7 @@
           >
 
           <!-- =================================================
-               ARTWORK + METADATA
+               PLAYER VIEW + ARTWORK + METADATA
                ================================================= -->
 
           <div
@@ -3122,7 +3263,7 @@
 
 
           <!-- =================================================
-               CONTROLS
+               PLAYER CONTROLS
                ================================================= -->
 
           <div
@@ -3245,7 +3386,7 @@
 
 
           <!-- =================================================
-               OSD
+               PLAYER FEEDBACK / OSD
                ================================================= -->
 
           <div
@@ -3254,76 +3395,6 @@
             aria-live="polite"
           ></div>
 
-
-          <!-- =================================================
-               REQUEST STATE
-               ================================================= -->
-
-          <div
-            id="requestView"
-            class="request-view"
-            hidden
-          >
-
-            <h2>
-              WHAT'S UP?
-            </h2>
-
-            <p>
-              Send a track request or message to MBV.
-            </p>
-
-
-            <div class="field">
-
-              <label for="requestName">
-                Name
-              </label>
-
-              <input
-                id="requestName"
-                type="text"
-                autocomplete="name"
-              >
-
-            </div>
-
-
-            <div class="field">
-
-              <label for="requestMessage">
-                Message
-              </label>
-
-              <textarea
-                id="requestMessage"
-                rows="4"
-              ></textarea>
-
-            </div>
-
-
-            <div class="request-actions">
-
-              <button
-                id="sendRequest"
-                class="request-button"
-                type="button"
-              >
-                SEND
-              </button>
-
-              <button
-                id="cancelRequest"
-                class="request-button secondary"
-                type="button"
-              >
-                BACK
-              </button>
-
-            </div>
-
-          </div>
 
           </div>
 
@@ -3619,6 +3690,16 @@
                   YELLOW
                 </button>
 
+                                <button
+                  class="skin-button"
+                  type="button"
+                  data-skin="green"
+                  style="--skin-color: #02a602"
+                  aria-pressed="false"
+                >
+                  GREEN
+                </button>
+
                 <button
                   class="skin-button"
                   type="button"
@@ -3893,31 +3974,54 @@
   <script>
 
     /* =========================================================
-       CONFIG
+       APP CONFIG + STATE
        ========================================================= */
 
     const CONFIG = {
 
       azuraCastBaseUrl:
-        "https://demo.azuracast.com",
+        "",
 
       stationShortcode:
-        "1",
+        "",
 
       streamUrl:
-        "http://c11.radioboss.fm:8318/autodj",
+        "",
 
       scheduleUrl:
-        "https://demo.azuracast.com/api/station/1/schedule",
+        "",
 
       nowPlayingInterval:
         15000
 
     };
 
+    function isLaunchConfigReady() {
+
+      const baseUrl =
+        (CONFIG.azuraCastBaseUrl || "").trim();
+
+      const stationCode =
+        (CONFIG.stationShortcode || "").trim();
+
+      const streamUrl =
+        (CONFIG.streamUrl || "").trim();
+
+      return (
+        baseUrl.length > 0 &&
+        stationCode.length > 0 &&
+        streamUrl.length > 0 &&
+        !baseUrl.includes("YOUR-") &&
+        !baseUrl.includes("example.com") &&
+        !stationCode.includes("YOUR_") &&
+        !streamUrl.includes("example.com")
+      );
+
+    }
+
 
     /* =========================================================
-       ELEMENTS
+       DOM ELEMENTS
        ========================================================= */
 
     const player =
@@ -4104,7 +4208,7 @@
 
 
     /* =========================================================
-       STATE
+       APP STATE + PLAYER STATE
        ========================================================= */
 
     let currentView =
@@ -4195,6 +4299,18 @@
     const mediaSessionSupported =
       "mediaSession" in navigator;
 
+    function canUseMediaSession() {
+      return (
+        mediaSessionSupported &&
+        (
+          window.isSecureContext ||
+          /^https?:\/\/localhost(?::\d+)?$/i.test(
+            window.location.origin
+          )
+        )
+      );
+    }
+
 
     /* =========================================================
        NAVIGATION ORDER
@@ -4248,7 +4364,7 @@
 
 
     /* =========================================================
-       PLAYER STATE
+       PLAYER STATE + LIVE UI
        ========================================================= */
 
     function setPlayerState(
@@ -4285,7 +4401,6 @@
         "player-paused",
         nextState === "paused"
       );
-
 
       updateSignalState();
 
@@ -4328,14 +4443,9 @@
       }
 
 
-      /*
-        Audio has become relevant outside LIVE.
-
-        PAUSED is intentionally included.
-      */
-
       const shouldAppear =
         [
+          "loading",
           "playing",
           "muted",
           "paused",
@@ -4356,12 +4466,6 @@
         "visible",
         miniPlayerHasAppeared
       );
-
-      miniPlayer.classList.toggle(
-        "is-playing",
-        playerState === "playing"
-      );
-
 
       miniShow.textContent =
         currentTrack.show ||
@@ -4387,7 +4491,7 @@
 
 
     /* =========================================================
-       PLAY ICON
+       PLAY / PAUSE ICONS
        ========================================================= */
 
     function setPlayIcon(
@@ -4540,7 +4644,7 @@
     function updateMediaSessionPlaybackState() {
 
       if (
-        !mediaSessionSupported
+        !canUseMediaSession()
       ) {
         return;
       }
@@ -4557,7 +4661,7 @@
     function updateMediaSessionMetadata() {
 
       if (
-        !mediaSessionSupported
+        !canUseMediaSession()
       ) {
         return;
       }
@@ -4607,7 +4711,7 @@
     function initializeMediaSession() {
 
       if (
-        !mediaSessionSupported
+        !canUseMediaSession()
       ) {
         return;
       }
@@ -4703,58 +4807,55 @@
     function initializeAudioAnalyser() {
 
       if (
-        audioContext
+        audioContext ||
+        !("AudioContext" in window || "webkitAudioContext" in window)
       ) {
         return;
       }
 
-
       try {
 
-        audioContext =
-          new (
-            window.AudioContext ||
-            window.webkitAudioContext
-          )();
+        const AudioCtor =
+          window.AudioContext ||
+          window.webkitAudioContext;
 
+        audioContext =
+          new AudioCtor();
 
         analyser =
           audioContext.createAnalyser();
 
-
         analyser.fftSize =
           512;
 
-
         analyser.smoothingTimeConstant =
-          0.55;
-
+          0.6;
 
         sourceNode =
           audioContext.createMediaElementSource(
             audio
           );
 
-
         sourceNode.connect(
           analyser
         );
 
-
         analyser.connect(
           audioContext.destination
         );
-
 
         startSignalAnimation();
 
       } catch (error) {
 
         console.warn(
-          "Audio analyser could not be initialized:",
+          "Audio analyser unavailable; falling back to animated signal without WebAudio routing:",
           error
         );
 
+        audioContext = null;
+        analyser = null;
+        sourceNode = null;
         startSignalAnimation();
 
       }
@@ -5029,16 +5130,44 @@
       }
 
 
-      const playButtonLabel =
-        playButton.getAttribute("aria-label") || "Play";
-
-      const userWantsToPause =
-        playButtonLabel === "Pause";
-
-
       if (
-        userWantsToPause
+        audio.paused
       ) {
+
+        playbackRequested =
+          true;
+
+        try {
+
+          setPlayerState(
+            "loading"
+          );
+
+
+          await audio.play();
+
+
+          setPlayerState(
+            isMuted
+              ? "muted"
+              : "playing"
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            "Playback failed:",
+            error
+          );
+
+
+          scheduleReconnect();
+
+
+        }
+
+      } else {
 
         playbackRequested =
           false;
@@ -5056,48 +5185,6 @@
         setPlayerState(
           "paused"
         );
-
-        return;
-
-      }
-
-
-      playbackRequested =
-        true;
-
-      try {
-
-        setPlayerState(
-          "loading"
-        );
-
-
-        await audio.play();
-
-
-        setPlayerState(
-          isMuted
-            ? "muted"
-            : "playing"
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "Playback failed:",
-          error
-        );
-
-        if (
-          playerState !== "loading"
-        ) {
-          setPlayerState(
-            "paused"
-          );
-        }
-
-        scheduleReconnect();
 
 
       }
@@ -5297,7 +5384,7 @@
 
 
     /* =========================================================
-       AUDIO EVENTS
+       AUDIO ENGINE + AUDIO EVENTS
        ========================================================= */
 
     audio.addEventListener(
@@ -5358,12 +5445,20 @@
       "waiting",
       () => {
 
+        /*
+          Live radio should not visibly enter a buffering state
+          during normal playback jitter. The stream remains live,
+          and the browser can recover without a UI state change.
+        */
+
         if (
           !audio.paused
         ) {
 
           setPlayerState(
-            "buffering"
+            isMuted
+              ? "muted"
+              : "playing"
           );
 
         }
@@ -5409,7 +5504,7 @@
 
 
     /* =========================================================
-       BUTTON EVENTS
+       BUTTON + CONTROL EVENTS
        ========================================================= */
 
     playButton.addEventListener(
@@ -5420,7 +5515,10 @@
 
     miniPlay.addEventListener(
       "click",
-      togglePlayback
+      event => {
+        event.stopPropagation();
+        togglePlayback();
+      }
     );
 
 
@@ -5432,7 +5530,10 @@
 
     miniMute.addEventListener(
       "click",
-      toggleMute
+      event => {
+        event.stopPropagation();
+        toggleMute();
+      }
     );
 
 
@@ -5452,6 +5553,7 @@
     miniVolumeSlider.addEventListener(
       "input",
       event => {
+        event.stopPropagation();
         setVolume(
           Number(
             event.target.value
@@ -5505,7 +5607,7 @@
 
 
     /* =========================================================
-       NAVIGATION
+       NAVIGATION + VIEW SYSTEM
        ========================================================= */
 
     function applyNavigation(
@@ -5653,6 +5755,28 @@
       }
     );
 
+    miniPlayer.addEventListener(
+      "click",
+      event => {
+        const interactiveTarget =
+          event.target.closest(
+            ".mini-controls, .mini-control, .mini-volume-control, .mini-volume-slider, .mini-volume-slider-wrap"
+          );
+
+        if (
+          interactiveTarget
+        ) {
+          return;
+        }
+
+        if (
+          currentView !== "live"
+        ) {
+          navigateTo("live");
+        }
+      }
+    );
+
     recentToggle.addEventListener(
       "click",
       () => {
@@ -5754,9 +5878,14 @@
           return;
         }
 
-        /*
-          Never intercept keyboard navigation while typing.
-        */
+        const target =
+          event.target;
+
+        const interactedElement =
+          target instanceof HTMLElement &&
+          target.closest(
+            "button, a, input, textarea, select, [role='button']"
+          );
 
         const tag =
           document.activeElement?.tagName;
@@ -5773,9 +5902,13 @@
         }
 
 
-        /*
-          Request mode suspends shortcuts.
-        */
+        if (
+          interactedElement &&
+          (event.key === " " || event.code === "Space")
+        ) {
+          return;
+        }
+
 
         if (
           requestOpen
@@ -5786,11 +5919,31 @@
         }
 
 
+        const key =
+          event.key;
+        const isSpaceKey =
+          key === " " ||
+          key === "Spacebar" ||
+          event.code === "Space";
+
+        if (
+          event.repeat
+        ) {
+          return;
+        }
+
         switch (
-          event.key
+          key
         ) {
 
           case " ":
+          case "Spacebar":
+
+            if (
+              !isSpaceKey
+            ) {
+              break;
+            }
 
             event.preventDefault();
 
@@ -5869,6 +6022,10 @@
         "requesting"
       );
 
+      app.classList.add(
+        "requesting"
+      );
+
 
       osd.style.display =
         "none";
@@ -5876,6 +6033,14 @@
 
       requestView.hidden =
         false;
+
+      requestAnimationFrame(
+        () => {
+          requestView.classList.add(
+            "open"
+          );
+        }
+      );
 
 
       document
@@ -5896,13 +6061,26 @@
         "requesting"
       );
 
+      app.classList.remove(
+        "requesting"
+      );
+
 
       osd.style.display =
         "";
 
 
-      requestView.hidden =
-        true;
+      requestView.classList.remove(
+        "open"
+      );
+
+      window.setTimeout(
+        () => {
+          requestView.hidden =
+            true;
+        },
+        280
+      );
 
       requestButton.focus();
 
@@ -6034,10 +6212,16 @@
 
 
     /* =========================================================
-       AZURACAST NOW PLAYING
+       STREAM DATA + NOW PLAYING
        ========================================================= */
 
     function getNowPlayingUrl() {
+
+      if (
+        !isLaunchConfigReady()
+      ) {
+        return "";
+      }
 
       return (
         CONFIG.azuraCastBaseUrl
@@ -6057,14 +6241,8 @@
     async function fetchNowPlaying() {
 
       if (
-        CONFIG.azuraCastBaseUrl.includes(
-          "YOUR-AZURACAST"
-        ) ||
-        CONFIG.stationShortcode.includes(
-          "YOUR_STATION"
-        )
+        !isLaunchConfigReady()
       ) {
-
         return;
 
       }
@@ -6279,6 +6457,11 @@
         nowPlayingTimer
       );
 
+      if (
+        !isLaunchConfigReady()
+      ) {
+        return;
+      }
 
       fetchNowPlaying();
 
@@ -6959,6 +7142,12 @@
 
     async function fetchSchedule() {
 
+      if (
+        !isLaunchConfigReady()
+      ) {
+        return;
+      }
+
       const parseScheduleDate = value => {
         const numericValue = Number(value);
 
@@ -7060,7 +7249,7 @@
 
 
     /* =========================================================
-       NOW MARKER
+       NOW MARKER + STYLES
        ========================================================= */
 
     function updateNowMarker() {
@@ -7261,6 +7450,10 @@
       red: {
         color: "#ff6b63",
         logo: "MBV_RED.png"
+      },
+      green: {
+        color: "#02a602",
+        logo: "MBV_GREENc.png"
       }
     };
 
@@ -7740,7 +7933,6 @@
       window.addEventListener(
         "beforeinstallprompt",
         event => {
-          event.preventDefault();
           deferredInstallPrompt = event;
 
           if (
@@ -7813,8 +8005,25 @@
       if (
         "serviceWorker" in navigator
       ) {
+        const refreshAfterServiceWorkerUpdate = () => {
+          if (
+            window.__mbvServiceWorkerRefreshScheduled
+          ) {
+            return;
+          }
+
+          window.__mbvServiceWorkerRefreshScheduled = true;
+
+          window.setTimeout(
+            () => {
+              window.location.reload();
+            },
+            250
+          );
+        };
+
         navigator.serviceWorker.register(
-          "sw.js?v=23",
+          "sw.js?v=25",
           {
             updateViaCache: "none"
           }
@@ -7826,6 +8035,12 @@
               registration.waiting.postMessage({
                 type: "SKIP_WAITING"
               });
+
+              if (
+                navigator.serviceWorker.controller
+              ) {
+                refreshAfterServiceWorkerUpdate();
+              }
             }
 
             registration.addEventListener(
@@ -7844,11 +8059,18 @@
                         installingWorker.state === "installed" &&
                         navigator.serviceWorker.controller
                       ) {
-                        window.location.reload();
+                        refreshAfterServiceWorkerUpdate();
                       }
                     }
                   );
                 }
+              }
+            );
+
+            registration.addEventListener(
+              "controllerchange",
+              () => {
+                refreshAfterServiceWorkerUpdate();
               }
             );
           })
@@ -7870,11 +8092,18 @@
     function configureAudio() {
 
       if (
+        isLaunchConfigReady() &&
         CONFIG.streamUrl
       ) {
 
         audio.src =
           CONFIG.streamUrl;
+
+      } else {
+
+        audio.removeAttribute(
+          "src"
+        );
 
       }
 
@@ -7926,9 +8155,23 @@
 
       configureAudio();
 
-      setPlayerState(
-        "paused"
-      );
+      if (
+        !isLaunchConfigReady()
+      ) {
+        setPlayerState(
+          "paused"
+        );
+      } else {
+        setPlayerState(
+          "loading"
+        );
+
+        audio.play().catch(() => {
+          setPlayerState(
+            "paused"
+          );
+        });
+      }
 
       startNowPlayingPolling();
 
