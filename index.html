@@ -1808,6 +1808,7 @@
 
     .about-keyboard {
       order: 4;
+      margin-top: 0;
     }
 
     @media (min-width: 701px) {
@@ -1855,7 +1856,7 @@
     .about-section.always-open .about-content {
       max-height: none;
 
-      padding: 0 0 34px;
+      padding: 0;
 
       opacity: 1;
     }
@@ -3802,7 +3803,9 @@
             <div class="about-content">
           <pre class="controls-reference">
             SPACE       PLAY / PAUSE
+            P           PLAY / PAUSE
             M           MUTE
+            R           REQUEST
             S           SCHEDULE
             A           ABOUT
             ← →         NAVIGATE</pre>
@@ -5290,6 +5293,9 @@
       const wasPlaying =
         !audio.paused;
 
+      const shouldKeepLiveState =
+        hasPlayableStream() &&
+        wasPlaying;
 
       isMuted =
         !isMuted;
@@ -5300,30 +5306,26 @@
 
 
       if (
-        isMuted
+        shouldKeepLiveState
       ) {
 
         setPlayerState(
-          wasPlaying
+          isMuted
             ? "muted"
-            : "paused"
+            : "playing"
         );
-
 
       } else {
 
         setPlayerState(
-          wasPlaying
-            ? "playing"
-            : "paused"
+          "paused"
         );
-
-
       }
 
 
       if (
-        wasPlaying &&
+        shouldKeepLiveState &&
+        isMuted === false &&
         audio.paused
       ) {
         audio.play().catch(
@@ -5990,12 +5992,38 @@
             break;
 
 
+          case "p":
+          case "P":
+
+            event.preventDefault();
+
+            togglePlayback();
+
+            break;
+
+
           case "m":
           case "M":
 
             event.preventDefault();
 
             toggleMute();
+
+            break;
+
+
+          case "r":
+          case "R":
+
+            event.preventDefault();
+
+            if (
+              requestOpen
+            ) {
+              closeRequest();
+            } else {
+              openRequest();
+            }
 
             break;
 
