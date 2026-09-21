@@ -5293,20 +5293,26 @@
       const wasPlaying =
         !audio.paused;
 
-      const shouldKeepLiveState =
-        hasPlayableStream() &&
-        wasPlaying;
-
       isMuted =
         !isMuted;
-
 
       audio.muted =
         isMuted;
 
+      const shouldStayLive =
+        hasPlayableStream() &&
+        wasPlaying;
+
+      const shouldKeepUiPlaying =
+        playerState === "playing" ||
+        playerState === "muted" ||
+        playerState === "loading" ||
+        playerState === "buffering" ||
+        playerState === "reconnecting";
 
       if (
-        shouldKeepLiveState
+        shouldStayLive ||
+        shouldKeepUiPlaying
       ) {
 
         setPlayerState(
@@ -5324,7 +5330,7 @@
 
 
       if (
-        shouldKeepLiveState &&
+        shouldStayLive &&
         isMuted === false &&
         audio.paused
       ) {
