@@ -4019,6 +4019,14 @@
 
     }
 
+    function hasPlayableStream() {
+      return (
+        isLaunchConfigReady() &&
+        !!CONFIG.streamUrl &&
+        CONFIG.streamUrl.trim().length > 0
+      );
+    }
+
 
     /* =========================================================
        DOM ELEMENTS
@@ -5117,6 +5125,27 @@
 
     async function togglePlayback() {
 
+      if (
+        !hasPlayableStream()
+      ) {
+
+        const shouldPlay =
+          playerState !== "playing" &&
+          playerState !== "muted";
+
+        playbackRequested =
+          shouldPlay;
+
+        setPlayerState(
+          shouldPlay
+            ? "playing"
+            : "paused"
+        );
+
+        return;
+      }
+
+
       initializeAudioAnalyser();
 
 
@@ -5138,6 +5167,14 @@
           true;
 
         try {
+
+          if (
+            !audio.src ||
+            !audio.src.includes(CONFIG.streamUrl)
+          ) {
+            audio.src =
+              CONFIG.streamUrl;
+          }
 
           setPlayerState(
             "loading"
@@ -5195,6 +5232,7 @@
     function scheduleReconnect() {
 
       if (
+        !hasPlayableStream() ||
         !playbackRequested ||
         reconnectTimer !== null ||
         audio.paused
