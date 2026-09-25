@@ -35,10 +35,9 @@
       --line: #303030;
       --yellow: #f8ca07;
       --blue: #044CAC;
+      --pink: #FF007F;
       --red: #FB0D1D;
-      --green: #02a602
-
-;
+      --green: #02a602;
 
       --content-width: 1080px;
       --about-width: 640px;
@@ -1978,6 +1977,100 @@
       gap: 18px;
     }
 
+    .shop-banner-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 14px;
+      background:
+        linear-gradient(180deg, rgba(22, 22, 22, .97), rgba(15, 15, 15, .97));
+      border: 2px solid rgba(255, 255, 255, .08);
+      box-shadow:
+        inset 0 0 0 2px rgba(0, 0, 0, .5),
+        0 0 18px color-mix(in srgb, var(--yellow) 16%, transparent),
+        0 0 22px color-mix(in srgb, var(--yellow) 10%, transparent);
+      color: var(--white);
+      text-decoration: none;
+      overflow: hidden;
+    }
+
+    .shop-banner-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, color-mix(in srgb, var(--yellow) 18%, transparent), transparent 22%, transparent 78%, color-mix(in srgb, var(--yellow) 12%, transparent)),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, .02),
+          rgba(255, 255, 255, .02) 1px,
+          transparent 1px,
+          transparent 9px
+        );
+      pointer-events: none;
+    }
+
+    .shop-banner-copy,
+    .shop-banner-art {
+      position: relative;
+      z-index: 1;
+    }
+
+    .manual-kicker-inline {
+      margin-bottom: 6px;
+      font-size: 8px;
+      letter-spacing: .18em;
+      color: var(--yellow);
+      text-transform: uppercase;
+    }
+
+    .shop-banner-copy {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .shop-banner-copy h3 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(14px, 1.8vw, 18px);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .shop-banner-copy p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.5;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .shop-banner-cta {
+      display: inline-flex;
+      margin-top: 9px;
+      color: var(--yellow);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(248, 202, 7, .25);
+    }
+
+    .shop-banner-art {
+      width: 74px;
+      height: auto;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, .1);
+      background: rgba(0, 0, 0, .24);
+      padding: 6px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .05), 0 0 16px rgba(255, 0, 127, .15);
+    }
+
     .sticker-card {
       display: grid;
       grid-template-columns: 72px minmax(0, 1fr) auto;
@@ -3045,7 +3138,7 @@
       <div class="request-panel">
 
         <h2>
-          WHAT'S UP?
+          THE MASSIVE MAIL VOLUME 2000
         </h2>
 
         <p>
@@ -3198,7 +3291,7 @@
                 id="artwork"
                 class="artwork"
                 src="dookie.png"
-                alt=""
+                alt="The current track artwork could not be found, but here's ours instead."
               >
 
               <div
@@ -3540,7 +3633,7 @@
               aria-expanded="true"
               aria-controls="recentList"
             >
-              RECENTLY PLAYED
+              RECENTLY ON
             </button>
 
             <div
@@ -3571,30 +3664,24 @@
 
           <section class="about-section manual-section sticker-section open always-open">
 
-            <div class="manual-kicker">
-              SUPPORT THE PROJECT
-            </div>
-
             <div class="about-content">
               <div class="sticker-grid">
-                <article class="sticker-card">
-                  <div class="sticker-art">
-                    <img
-                      src="MBV_YELLOWc.png"
-                      alt="YELLOW"
-                    >
+                <a
+                  class="shop-banner-card"
+                  href="mailto:alright@mbvradio.com?subject=MBV%20Merch%20Request"
+                  aria-label="Order MBV stickers, patches and beanies"
+                >
+                  <div class="shop-banner-copy">
+                    <h3>OPEN 24/7</h3>
+                    <p>Get 35% off blinker fluid.</p>
+                    <span class="shop-banner-cta">STORE</span>
                   </div>
-                  <div class="sticker-details">
-                    <strong>STICKER PACK</strong>
-                    <span class="sticker-price">$12 / HUF3,800</span>
-                  </div>
-                  <a
-                    class="sticker-order"
-                    href="mailto:alright@mbvradio.com?subject=MBV%20Yellow%20Sticker"
+                  <img
+                    class="shop-banner-art"
+                    src="MBV_pink.png"
+                    alt=""
                   >
-                    BUY
-                  </a>
-                </article>
+                </a>
               </div>
             </div>
           </section>
@@ -3610,7 +3697,7 @@
             <div class="about-content">
 
               <p>
-               <strong> Massive Brain Volume is a playlist-oriented non-stop drum & bass radio.</strong>
+               <strong> Massive Brain Volume is a playlist/vibe-oriented non-stop drum & bass radio.</strong>
                </p>
                <p>
                 Built with the nostalgia of PlayStation 2 racing games, and the love of automotive gadgets,
@@ -3638,24 +3725,12 @@
                   </span>
                 </li>
 
-                <li class="fact">
-                  <span class="fact-label">
-                    SAY HELLO
-                  </span>
-                  <span class="fact-value">
-                    alright@mbvradio.com
-                  </span>
-                </li>
-
                                 <li class="fact">
                   <span class="fact-label">
                     THX
                   </span>
                   <span class="fact-value">
-                    Gromit <br>
-                    Josiah <br>
-                    Sol <br>
-                    Burg <br>
+                    Frank, Korben, Josiah, Anders<br>
                   </span>
                 </li>
 
@@ -3719,6 +3794,16 @@
                   aria-pressed="false"
                 >
                   RED
+                </button>
+
+                <button
+                  class="skin-button"
+                  type="button"
+                  data-skin="pink"
+                  style="--skin-color: #FF007F"
+                  aria-pressed="false"
+                >
+                  PINK
                 </button>
 
               </div>
@@ -3790,6 +3875,25 @@
                 </div>
               </div>
 
+              <div class="motion-preference">
+                <div class="motion-preference-row">
+                  <div class="motion-preference-copy">
+                    <strong>AUTO SKIN</strong>
+                    <span>Adjust the site palette to match the current show.</span>
+                  </div>
+
+                  <div class="motion-controls">
+                    <label class="motion-toggle" for="autoSkinEnabled">
+                      <input
+                        id="autoSkinEnabled"
+                        type="checkbox"
+                      >
+                      <span class="motion-checkmark" aria-hidden="true">&#10003;</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </section>
@@ -3802,12 +3906,11 @@
             </div>
             <div class="about-content">
           <pre class="controls-reference">
-            SPACE       PLAY / PAUSE
-            P           PLAY / PAUSE
+            SPACE / P   PLAY / PAUSE
             M           MUTE
-            R           REQUEST
+            R           SEND A MESSAGE
             S           SCHEDULE
-            A           ABOUT
+            A           ABOUT / PREFERENCES
             ← →         NAVIGATE</pre>
             </div>
           </section>
@@ -4053,6 +4156,9 @@
     const brandLogo =
       document.getElementById("brandLogo");
 
+    const shopBannerArt =
+      document.querySelector(".shop-banner-art");
+
     const primaryNav =
       document.querySelector(".primary-nav");
 
@@ -4084,6 +4190,9 @@
 
     const reduceMotionEnabled =
       document.getElementById("reduceMotionEnabled");
+
+    const autoSkinEnabled =
+      document.getElementById("autoSkinEnabled");
 
     const screensaverOverlay =
       document.getElementById("screensaverOverlay");
@@ -6493,6 +6602,7 @@
       }
 
       updateMediaSessionMetadata();
+      updateAutoSkinFromCurrentShow();
 
 
       if (
@@ -6647,7 +6757,7 @@
           5,
 
         end:
-          10,
+          9,
 
         description:
           "LIQUID / DEEP",
@@ -6662,10 +6772,10 @@
           "CRUISE",
 
         start:
-          10,
+          9,
 
         end:
-          16,
+          15,
 
         description:
           "ROLLING / GROOVY",
@@ -6680,10 +6790,10 @@
           "TRAFF*CK",
 
         start:
-          16,
+          15,
 
         end:
-          20,
+          19,
 
         description:
           "DRIVING / ENERGETIC",
@@ -6698,7 +6808,7 @@
           "NIGHT SHIFT",
 
         start:
-          20,
+          19,
 
         end:
           24,
@@ -7196,6 +7306,8 @@
           next.start
         );
 
+      updateAutoSkinFromCurrentShow();
+
       Array.from(
         document.querySelectorAll(
           ".daypart"
@@ -7519,6 +7631,10 @@
         color: "#65a9e8",
         logo: "MBV_BLUE.png"
       },
+      pink: {
+        color: "#FF007F",
+        logo: "MBV_pink.png"
+      },
       red: {
         color: "#ff6b63",
         logo: "MBV_RED.png"
@@ -7529,14 +7645,93 @@
       }
     };
 
+    let manualSkinSelection =
+      localStorage.getItem("mbv-skin") ||
+      "classic";
+
+    let activeSkinName =
+      manualSkinSelection;
+
+    const autoSkinRules = [
+      [/^AYE, M!$/i, "classic"],
+      [/^DAYBREAK$/i, "green"],
+      [/^CRUISE$/i, "blue"],
+      [/^TRAFF\*CK$/i, "red"],
+      [/^NIGHT SHIFT$/i, "pink"]
+    ];
+
+    function getCurrentScheduledShowName() {
+      if (!scheduleData.length) {
+        return currentTrack.show ||
+          currentShowName.textContent ||
+          liveCurrentShow.textContent ||
+          "";
+      }
+
+      const now = new Date();
+      const currentHour = now.getHours() + now.getMinutes() / 60;
+      const currentIndex = scheduleData.findIndex(
+        part => currentHour >= Number(part.start) && currentHour < Number(part.end)
+      );
+
+      return (
+        scheduleData[currentIndex]?.name ||
+        currentTrack.show ||
+        currentShowName.textContent ||
+        liveCurrentShow.textContent ||
+        ""
+      );
+    }
+
+    function resolveAutoSkinName(
+      sourceName
+    ) {
+      const candidate =
+        String(sourceName || "").trim();
+
+      if (!candidate) {
+        return manualSkinSelection || "classic";
+      }
+
+      for (const [pattern, skinName] of autoSkinRules) {
+        if (pattern.test(candidate)) {
+          return skinName;
+        }
+      }
+
+      return "classic";
+    }
+
+    function updateAutoSkinFromCurrentShow() {
+      if (!autoSkinEnabled || !autoSkinEnabled.checked) {
+        return;
+      }
+
+      const sourceName =
+        getCurrentScheduledShowName();
+
+      const nextSkin =
+        resolveAutoSkinName(sourceName);
+
+      if (nextSkin !== activeSkinName) {
+        applySkin(nextSkin, { persistManual: false });
+      }
+    }
 
     function applySkin(
-      skinName
+      skinName,
+      options = {}
     ) {
+
+      const {
+        persistManual = false
+      } = options;
 
       const skin =
         skinConfig[skinName] ||
         skinConfig.classic;
+
+      activeSkinName = skinName;
 
       document.documentElement.style.setProperty(
         "--yellow",
@@ -7545,6 +7740,13 @@
 
       brandLogo.src =
         skin.logo;
+
+      if (
+        shopBannerArt
+      ) {
+        shopBannerArt.src =
+          skin.logo;
+      }
 
       if (
         screensaverLogo
@@ -7562,10 +7764,13 @@
         }
       );
 
-      localStorage.setItem(
-        "mbv-skin",
-        skinName
-      );
+      if (persistManual) {
+        manualSkinSelection = skinName;
+        localStorage.setItem(
+          "mbv-skin",
+          skinName
+        );
+      }
 
     }
 
@@ -7574,18 +7779,58 @@
       button => {
         button.addEventListener(
           "click",
-          () => applySkin(button.dataset.skin)
+          () => {
+            const chosenSkin = button.dataset.skin;
+            manualSkinSelection = chosenSkin;
+            localStorage.setItem(
+              "mbv-skin",
+              chosenSkin
+            );
+
+            if (!autoSkinEnabled || !autoSkinEnabled.checked) {
+              applySkin(chosenSkin, { persistManual: true });
+            }
+          }
         );
       }
     );
 
 
     function initializeSkin() {
-
-      applySkin(
+      manualSkinSelection =
         localStorage.getItem("mbv-skin") ||
-        "classic"
-      );
+        "classic";
+
+      const autoPreference =
+        localStorage.getItem("mbv-auto-skin") === "true";
+
+      if (autoSkinEnabled) {
+        autoSkinEnabled.checked = autoPreference;
+
+        autoSkinEnabled.addEventListener(
+          "change",
+          () => {
+            const enabled = autoSkinEnabled.checked;
+            localStorage.setItem(
+              "mbv-auto-skin",
+              String(enabled)
+            );
+
+            if (enabled) {
+              updateAutoSkinFromCurrentShow();
+              return;
+            }
+
+            applySkin(manualSkinSelection, { persistManual: false });
+          }
+        );
+      }
+
+      applySkin(manualSkinSelection, { persistManual: false });
+
+      if (autoSkinEnabled && autoSkinEnabled.checked) {
+        updateAutoSkinFromCurrentShow();
+      }
 
     }
 
